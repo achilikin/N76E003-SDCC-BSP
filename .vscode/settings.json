@@ -1,0 +1,22 @@
+{
+    "files.exclude": {
+        "**/*.lst": true,
+        "**/*.rst": true,
+        "**/*.rel": true,
+        "**/*.sym": true,
+        "**/*.asm": true,
+        "**/*.hex": true,
+        "**/*.ihx": true,
+        "**/*.lk": true,
+        "**/*.map": true,
+        "**/*.mem": true,
+        "**/*.bin": true,
+    },
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.namespace": "sameLine",
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "sameLine",
+	"C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, UseTab: Always, IndentWidth: 4, TabWidth: 4, BreakBeforeBraces: Attach, AllowShortIfStatementsOnASingleLine: true, IndentCaseLabels: false, ColumnLimit: 0 }",
+	"C_Cpp.errorSquiggles": "Disabled",
+}

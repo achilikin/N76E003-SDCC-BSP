@@ -1,0 +1,27 @@
+../../bsp/N76E003.rel: ../../bsp/N76E003.c ../../bsp/N76E003.h
+
+../../bsp/iap_read.rel: ../../bsp/N76E003.h ../../bsp/iap_read.c ../../bsp/iap.h
+
+../../bsp/iap_write.rel: ../../bsp/N76E003.h ../../bsp/iap_write.c ../../bsp/iap.h
+
+../../bsp/uart.rel: ../../bsp/N76E003.h ../../bsp/uart.c ../../bsp/uart.h ../../bsp/irq.h ../../bsp/event.h
+
+../../bsp/tick.rel: ../../bsp/N76E003.h ../../bsp/tick.c ../../bsp/tick.h ../../bsp/irq.h
+
+../../bsp/event.rel: ../../bsp/N76E003.h ../../bsp/event.c ../../bsp/event.h ../../bsp/irq.h ../../bsp/event.h
+
+../../bsp/terminal.rel: ../../bsp/terminal.c ../../bsp/terminal.h
+
+../../lib/ht1621.rel: ../../bsp/N76E003.h ../../lib/ht1621.c ../../lib/ht1621.h
+
+../../bsp/lcd_lpwm.rel: ../../bsp/N76E003.h ../../lib/lcd_lpwm.c ../../lib/lcd_lpwm.h ../../lib/ht1621.h
+
+../../bsp/adc.rel: ../../bsp/N76E003.h ../../bsp/adc.c ../../bsp/adc.h ../../bsp/iap.h
+
+../../bsp/pwm.rel: ../../bsp/N76E003.h ../../bsp/pwm.c ../../bsp/pwm.h ../../bsp/terminal.h
+
+../../bsp/key.rel: ../../bsp/N76E003.h ../../bsp/key.c ../../bsp/key.h ../../bsp/event.h
+
+main.rel: main.c main.h cfg.c cfg.h target.h ../../bsp/N76E003.h ../../bsp/iap.h ../../bsp/irq.h \
+ ../../bsp/tick.h ../../bsp/uart.h ../../bsp/event.h ../../bsp/terminal.h \
+ ../../lib/lcd_lpwm.h ../../bsp/adc.h ../../bsp/pwm.h ../../bsp/key.h

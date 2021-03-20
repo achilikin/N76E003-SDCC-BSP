@@ -1,0 +1,39 @@
+../../bsp/N76E003.rel: ../../bsp/N76E003.c ../../bsp/N76E003.h
+
+../../bsp/iap_read.rel: ../../bsp/N76E003.h ../../bsp/iap_read.c ../../bsp/iap.h
+
+../../bsp/iap_write.rel: ../../bsp/N76E003.h ../../bsp/iap_write.c ../../bsp/iap.h
+
+../../bsp/uart.rel: ../../bsp/N76E003.h ../../bsp/uart.c ../../bsp/uart.h ../../bsp/irq.h ../../bsp/event.h
+
+../../bsp/tick.rel: ../../bsp/N76E003.h ../../bsp/tick.c ../../bsp/tick.h ../../bsp/irq.h
+
+../../bsp/pinterrupt.rel: ../../bsp/N76E003.h ../../bsp/pinterrupt.c ../../bsp/pinterrupt.h ../../bsp/irq.h
+
+../../bsp/event.rel: ../../bsp/N76E003.h ../../bsp/event.c ../../bsp/event.h ../../bsp/irq.h ../../bsp/event.h
+
+../../bsp/adc.rel: ../../bsp/N76E003.h ../../bsp/adc.c ../../bsp/adc.h ../../bsp/iap.h
+
+../../bsp/terminal.rel: ../../bsp/terminal.c ../../bsp/terminal.h
+
+../../bsp/i2c.rel: ../../bsp/i2c.c ../../bsp/i2c.h ../../bsp/tick.h
+
+../../lib/dump.rel: ../../lib/dump.c ../../lib/dump.h ../../bsp/uart.h
+
+../../lib/dht.rel: ../../lib/dht.c ../../lib/dht.h
+
+../../lib/ds3231.rel: ../../lib/ds3231.c ../../lib/ds3231.h ../../bsp/i2c.h
+
+../../lib/bv4618.rel: ../../lib/bv4618.c ../../lib/bv4618.h ../../bsp/i2c.h ../../bsp/tick.h
+
+../../lib/pcf8574.rel: ../../lib/pcf8574.c ../../lib/pcf8574.h ../../bsp/i2c.h ../../bsp/tick.h
+
+../../lib/i2c_mem.rel: ../../lib/i2c_mem.c ../../lib/i2c_mem.h ../../bsp/i2c.h ../../bsp/tick.h
+
+cli.rel: main.h cli.c ../../bsp/terminal.h ../../bsp/uart.h ../../bsp/i2c.h ../../lib/ds3231.h
+
+ps2k.rel: ps2k.c ../../bsp/N76E003.h ../../bsp/irq.h ../../bsp/event.h
+
+main.rel: main.c main.h cfg.c cfg.h cli.c ps2k.c ../../bsp/N76E003.h ../../bsp/iap.h ../../bsp/irq.h \
+ ../../bsp/tick.h ../../bsp/uart.h ../../bsp/event.h ../../bsp/terminal.h ../../bsp/adc.h\
+ ../../bsp/i2c.h ../../lib/ds3231.h ../../lib/bv4618.h ../../lib/pcf8574.h ../../lib/i2c_mem.h
