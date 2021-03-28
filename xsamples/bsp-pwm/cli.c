@@ -115,7 +115,7 @@ int8_t commander(__idata char *cmd) {
 					uart_putsc("high");
 				uart_putc('\n');
 			}
-			return CLI_EOK;
+			goto EOK;
 		}
 
 		if (str_is(arg, "stop")) {
@@ -126,15 +126,15 @@ int8_t commander(__idata char *cmd) {
 		else if (str_is(arg, "start"))
 			PWMRUN = 1;
 		else
-			return CLI_EARG;
-		return CLI_EOK;
+			goto EARG;
+		goto EOK;
 	}
 
 	if (str_is(cmd, "div")) {
 		if (*arg == '\0') {
 			uart_putn(1<< (PWMCON1 & 0x07));
 			uart_putc('\n');
-			return CLI_EOK;
+			goto EOK;
 		}
 		switch (argtou(arg, &arg)) {
 		case 1:
@@ -164,14 +164,14 @@ int8_t commander(__idata char *cmd) {
 		default:
 			return CLI_EARG;
 		}
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	if (str_is(cmd, "opmode")) { /* 17.1.3 Operation Modes */
 		if (*arg == '\0') {
 			print_opmode();
 			uart_putc('\n');
-			return CLI_EOK;
+			goto EOK;
 		}
 		if (str_is(arg, "independent"))
 			PWMCON1 &= 0x3F;
@@ -186,12 +186,12 @@ int8_t commander(__idata char *cmd) {
 			set_opmode_phased();
 			PMEN = 0x3F; /* mask off all outputs */
 			PMD = 0x00;	 /* set all outputs to 0, interrupt will driver them up */
-			return CLI_EOK;
+			goto EOK;
 		} else
 			return CLI_EARG;
 		clr_opmode_phased();
 		PMEN = 0x00; /* run PWM for all outputs */
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	/* Group Mode. If enabled, the duty of the first three PWM pairs defined by PWM01H & PWM01L */
@@ -199,7 +199,7 @@ int8_t commander(__idata char *cmd) {
 		if (*arg == '\0') {
 			print_gpmode();
 			uart_putc('\n');
-			return CLI_EOK;
+			goto EOK;
 		}
 		if (str_is(arg, "enable"))
 			PWMCON1 |= PWMCON1_GP;
@@ -207,14 +207,14 @@ int8_t commander(__idata char *cmd) {
 			PWMCON1 &= ~PWMCON1_GP;
 		else
 			return CLI_EARG;
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	if (str_is(cmd, "period")) {
 		if (*arg == '\0') {
 			print_period();
 			uart_putc('\n');
-			return CLI_EOK;
+			goto EOK;
 		}
 		val.u16 = argtou(arg, &arg);
 		if (!val)
@@ -224,14 +224,14 @@ int8_t commander(__idata char *cmd) {
 		LOAD = 1;
 		/* LOAD will be reset by HW only if PWM generator is running */
 		if (PWMRUN)	while(LOAD);
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	if (str_is(cmd, "inttype")) {
 		if (*arg == '\0') {
 			print_inttype();
 			uart_putc('\n');
-			return CLI_EOK;
+			goto EOK;
 		}
 		if (str_is(arg, "fall"))
 			i = 0x00;
@@ -243,7 +243,7 @@ int8_t commander(__idata char *cmd) {
 			i = SET_BIT5 | SET_BIT4;
 		else if (str_is(arg, "period")) {
 			set_inttype_period();
-			return CLI_EOK;
+			goto EOK;
 		} else
 			return CLI_EARG;
 		clr_inttype_period();
@@ -251,7 +251,7 @@ int8_t commander(__idata char *cmd) {
 		PWMINTC &= ~(SET_BIT5 | SET_BIT4);
 		PWMINTC |= i;
 		sfr_page(0);
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	if (str_is(cmd, "duty")) {
@@ -261,7 +261,7 @@ int8_t commander(__idata char *cmd) {
 		if (*arg == '\0') {
 			val.u16 = pwm_duty_get(i);
 			uart_putnl(val.u16);
-			return CLI_EOK;
+			goto EOK;
 		}
 		val.u16 = argtou(arg, &arg);
 		if (!val)
@@ -269,7 +269,7 @@ int8_t commander(__idata char *cmd) {
 		pwm_duty_set(i, val.u16);
 		LOAD = 1;
 		if (PWMRUN)	while(LOAD);
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	if (str_is(cmd, "mask")) {
@@ -279,7 +279,7 @@ int8_t commander(__idata char *cmd) {
 		if (*arg == '\0') {
 			val.u16 = pwm_duty_get(i);
 			uart_putnl(val.u16);
-			return CLI_EOK;
+			goto EOK;
 		}
 		if (str_is(arg, "pwm"))
 			pwm_channel_set_mode(i, PWM_MODE_RUN);
@@ -289,22 +289,22 @@ int8_t commander(__idata char *cmd) {
 			pwm_channel_set_mode(i, PWM_MODE_HIGH);
 		else
 			return CLI_EARG;
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	if (str_is(cmd, "type")) { /* 17.1.2 PWM Types */
 		if (*arg == '\0') {
 			print_type();
 			uart_putc('\n');
-			return CLI_EOK;
+			goto EOK;
 		}
 		if (str_is(arg, "edge"))
 			PWM_EDGE_TYPE;
 		else if (str_is(arg, "center"))
 			PWM_CENTER_TYPE;
 		else
-			return CLI_EARG;
-		return CLI_EOK;
+			goto EARG;
+		goto EOK;
 	}
 
 	/* phased mode settings */
@@ -316,30 +316,30 @@ int8_t commander(__idata char *cmd) {
 			for (; (1 << i) != pmd_end; i++);
 			uart_putn(i);
 			uart_putc('\n');
-			return CLI_EOK;
+			goto EOK;
 		}
 		val.u8low = argtou(arg, &arg);
 		if ((val.u8low > 5) || (*arg == '\0'))
-			return CLI_EARG;
+			goto EARG;
 		val.u8high = argtou(arg, &arg);
 		if ((val.u8high > 5) || (val.u8high <= val.u8low))
 			goto EARG;
 		pmd_start = 1 << val.u8low;
 		pmd_end = 1 << val.u8high;
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	/* shift between phases in number of PWM periods */
 	if (str_is(cmd, "shift")) {
 		if (*arg == '\0') {
 			uart_putnl(phase_shift);
-			return CLI_EOK;
+			goto EOK;
 		}
 		val.u16 = argtou(arg, &arg);
 		if (val.u8high)
-			return CLI_EARG;
+			goto EARG;
 		phase_shift = val.u8low;
-		return CLI_EOK;
+		goto EOK;
 	}
 
 	return CLI_ENOTSUP;
