@@ -12,16 +12,20 @@
 
 ../../bsp/terminal.rel: ../../bsp/terminal.c ../../bsp/terminal.h
 
-../../lib/ht1621.rel: ../../bsp/N76E003.h ../../lib/ht1621.c ../../lib/ht1621.h
-
-../../bsp/lcd_lpwm.rel: ../../bsp/N76E003.h ../../lib/lcd_lpwm.c ../../lib/lcd_lpwm.h ../../lib/ht1621.h
-
 ../../bsp/adc.rel: ../../bsp/N76E003.h ../../bsp/adc.c ../../bsp/adc.h ../../bsp/iap.h
 
 ../../bsp/pwm.rel: ../../bsp/N76E003.h ../../bsp/pwm.c ../../bsp/pwm.h ../../bsp/terminal.h
 
 ../../bsp/key.rel: ../../bsp/N76E003.h ../../bsp/key.c ../../bsp/key.h ../../bsp/event.h
 
-main.rel: main.c main.h cfg.c cfg.h target.h ../../bsp/N76E003.h ../../bsp/iap.h ../../bsp/irq.h \
- ../../bsp/tick.h ../../bsp/uart.h ../../bsp/event.h ../../bsp/terminal.h \
- ../../lib/lcd_lpwm.h ../../bsp/adc.h ../../bsp/pwm.h ../../bsp/key.h
+../../lib/ht1621.rel: ../../bsp/N76E003.h ../../lib/ht1621.c ../../lib/ht1621.h
+
+../../lib/lcd_lpwm.rel: ../../bsp/N76E003.h ../../lib/lcd_lpwm.c ../../lib/lcd_lpwm.h ../../lib/ht1621.h
+
+../../lib/pwm_range.rel: ../../bsp/N76E003.h ../../lib/pwm_range.c ../../lib/pwm_range.h ../../bsp/irq.h
+
+main.rel: main.c main.h cfg.c cfg.h target.h \
+ ../../bsp/N76E003.h ../../bsp/iap.h ../../bsp/irq.h ../../bsp/tick.h \
+ ../../bsp/uart.h ../../bsp/event.h ../../bsp/terminal.h ../../bsp/adc.h \
+ ../../bsp/pwm.h ../../bsp/key.h ../../lib/lcd_lpwm.h ../../lib/ht1621.h \
+ ../../lib/pwm_range.h

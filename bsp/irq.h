@@ -35,6 +35,7 @@ enum IRQ_NUM {
 #define IRQ_I2C_REG_BANK	IRQ_REG_BANK
 #define IRQ_PIN_REG_BANK	IRQ_REG_BANK
 #define IRQ_WKT_REG_BANK	IRQ_REG_BANK
+#define IRQ_PWM_REG_BANK 	IRQ_REG_BANK
 
 /*--------------------------------------------------------------------------
   Some defines to make VS-Code IntelliSense happy

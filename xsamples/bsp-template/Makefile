@@ -1,47 +1,37 @@
 ## some configuration defines
-IMAGE   = main
-MCU     = N76E003AT20
-ARCH    = mcs51
+IMAGE     = main
+MCU       = N76E003AT20
+ARCH      = mcs51
 ## set system clock to 16.0 or 16.6 MHz
 ## F_OSC  = FOSC_16000
 F_OSC     = FOSC_16600
-## handpicked RC trim value
-HIRC_TRIM = 16
 
-## set to true to compile debug calls
-LCD_DEBUG = false
-KEY_DEBUG = false
+## devboard uses UART 0
+USE_UART  = 0
+## handpicked RC trim value
+HIRC_TRIM = 19
+
+## pin to set time markers
+MARK_PIN  = P04
 
 BSPROOT = ../..
 BSPDIR  = $(BSPROOT)/bsp
 LIBDIR  = $(BSPROOT)/lib
 
 SRCS  = $(BSPDIR)/N76E003.c
-SRCS += $(BSPDIR)/event.c
-SRCS += $(BSPDIR)/iap_read.c
-SRCS += $(BSPDIR)/iap_write.c
-SRCS += $(BSPDIR)/adc.c
-SRCS += $(BSPDIR)/terminal.c
 SRCS += $(BSPDIR)/tick.c
 SRCS += $(BSPDIR)/uart.c
-SRCS += $(BSPDIR)/pwm.c
-SRCS += $(BSPDIR)/key.c
-
-SRCS += $(LIBDIR)/ht1621.c
-SRCS += $(LIBDIR)/lcd_lpwm.c
-SRCS += $(LIBDIR)/pwm_range.c
+SRCS += $(BSPDIR)/event.c
+SRCS += $(BSPDIR)/terminal.c
 
 SRCS += $(wildcard *.c)
 
-OBJS  = $(SRCS:.c=.rel)
+OBJS = $(SRCS:.c=.rel)
 
-#ASRCS   := $(wildcard *.s $(LIBDIR)/*.s)
-#OBJS    += $(ASRCS:.s=.rel)
-
-CC  = sdcc
-LD  = sdld
-AS  = sdas8051
-ICP = nulink
+CC	= sdcc
+LD	= sdld
+AS	= sdas8051
+ICP = nulink.exe
 
 ## uncomment '--stack-auto' to place functions parameters
 ## on the stack automatically
@@ -61,7 +51,8 @@ FORCE    = /F /Q
 SIZE     = python $(BSPROOT)/pys/size-$(ARCH).py
 OBJCOPY  = sdobjcopy
 ASFLAGS  = -plosgff
-CFLAGS   = -m$(ARCH) -p$(MCU) -D$(F_OSC) --std-sdcc11
+CFLAGS  += -m$(ARCH) -p$(MCU) --std-sdcc11
+CFLAGS  += -D$(F_OSC) -DDHT_PIN=$(DHT_PIN)
 CFLAGS  += -I. -I$(BSPDIR) -I$(LIBDIR)
 CFLAGS  += $(STACK)
 CFLAGS  += --fomit-frame-pointer
@@ -69,16 +60,15 @@ CFLAGS  += --fomit-frame-pointer
 ## but use --opt-code-size just in case of support in the future
 CFLAGS += --opt-code-size
 #CFLAGS += --opt-code-speed
+CFLAGS += -DUSE_UART=$(USE_UART)
 
-## include debug interfaces if enabled
-ifeq ($(LCD_DEBUG),true)
-CFLAGS += -DLCD_DEBUG
-endif
-ifeq ($(KEY_DEBUG),true)
-CFLAGS += -DKEY_DEBUG
-endif
+## include some debug interfaces if enabled
 ifneq ($(HIRC_TRIM),false)
 CFLAGS += -DHIRC_TRIM=$(HIRC_TRIM)
+endif
+
+ifneq ($(MARK_PIN),false)
+CFLAGS += -DMARK_PIN=$(MARK_PIN)
 endif
 
 LDFLAGS  = -m$(ARCH) -l$(ARCH) --out-fmt-ihx

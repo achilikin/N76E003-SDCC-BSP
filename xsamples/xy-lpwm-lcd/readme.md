@@ -24,6 +24,18 @@ On startup N76E003 will measure Vdd, display voltage on the screes for a couple 
 
 Serial connection speed should be set to 38400 baud.
 
+## Used code and data memory
+```
+   Name              Start    End  Size   Max Spare
+   ---------------- ------ ------ ----- ----- -----------
+   REG BANKS        0x0000 0x000F     2     4     2
+   IDATA            0x0000 0x0075   118   256   138
+   OVERLAYS                           3
+   STACK            0x0076 0x00FF   138   248   138
+   EXTERNAL RAM     0x0001 0x00db   219   768   549 71.5% free
+   ROM/EPROM/FLASH  0x0000 0x229b  8860 18432  9572 51.9% free
+```
+
 ## Supported commands:
 * *reset* do soft reset
 * *lcd 0#...7#* display specified symbol at the given position, up to 8 symbols can be provided

@@ -3,13 +3,13 @@
 #include <iap.h>
 #include <i2c.h>
 #include <key.h>
-#include <pwm.h>
 #include <adc.h>
 #include <tick.h>
 #include <uart.h>
 #include <event.h>
 #include <ht1621.h>
 #include <lcd_lpwm.h>
+#include <pwm_range.h>
 #include <terminal.h>
 
 #include "main.h"

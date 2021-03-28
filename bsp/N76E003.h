@@ -3,7 +3,7 @@
 
   Header file for Nuvoton N76E003 BSP adopted for SDCC compiler
   http://sdcc.sourceforge.net/
-  
+
   Original header files for SFR bytes and bits,
   SFR Macros and Functions Defines are from OpenNuvoton project
   https://github.com/OpenNuvoton/N76E003-BSP
@@ -56,9 +56,10 @@ void set_fosc_16600(void);
  * Simple union of uint16_t and two bytes
  */
 typedef union {
-	uint16_t val;
+	uint16_t u16;
 	struct {
-		uint8_t data[2];
+		uint8_t u8low;
+		uint8_t u8high;
 	};
 } val16_t;
 
@@ -129,7 +130,10 @@ __sfr __at(0x8D) TH1;       /** timer 1, high byte */
 
 __sfr __at(0x8E) CKCON;		/** clock control */
 	/* set_* & clr_* defines obscure bit names, so better to use full name */
-	#define CKCON_CLOEN SET_BIT1
+	#define CKCON_CLOEN  SET_BIT1 /** enable Fsys CLOCK output on P1.1 */
+	#define CKCON_T1M 	 SET_BIT4 /** Timer 1 is system clock, else Fsys / 12 */
+	#define CKCON_T0M 	 SET_BIT3 /** Timer 0 is system clock, else Fsys / 12 */
+	#define CKCON_PWMCKS SET_BIT6 /** PWM clock source is T1, else Fsys */
 	#define set_PWMCKS  CKCON |= SET_BIT6
 	#define set_T1M     CKCON |= SET_BIT4
 	#define set_T0M     CKCON |= SET_BIT3
@@ -312,11 +316,13 @@ __sfr __at(0xCF) ADCMPH;
 __sfr __at(0xD0) PSW;
 	__sbit __at(0xD0+7) CY;
 	__sbit __at(0xD0+6) AC;
-	__sbit __at(0xD0+5) F0;
+	__sbit __at(0xD0+5) F0; /** F0 or UD0 (User Defined), MCS-51 standard */
+	__sbit __at(0xD0+5) UD0; /** F0 or UD0 (User Defined), MCS-51 standard */
 	__sbit __at(0xD0+4) RS1;
 	__sbit __at(0xD0+3) RS0;
 	__sbit __at(0xD0+2) OV;
-	__sbit __at(0xD0+1) UD; /** F1 or UD (User Defined), MCS-51 standard */
+	__sbit __at(0xD0+1) F1; /** F1 or UD1 (User Defined), MCS-51 standard */
+	__sbit __at(0xD0+1) UD1; /** F1 or UD1 (User Defined), MCS-51 standard */
 	__sbit __at(0xD0+0) P;
 
 __sfr __at(0xD1) PWMPH;
@@ -339,7 +345,18 @@ __sfr __at(0xDB) PWM1L;
 __sfr __at(0xDC) PWM2L;
 __sfr __at(0xDD) PWM3L;
 __sfr __at(0xDE) PIOCON0;
+	#define PIOCON0_PIO05 SET_BIT5
+	#define PIOCON0_PIO04 SET_BIT4
+	#define PIOCON0_PIO03 SET_BIT3
+	#define PIOCON0_PIO02 SET_BIT2
+	#define PIOCON0_PIO01 SET_BIT1
+	#define PIOCON0_PIO00 SET_BIT0
 __sfr __at(0xDF) PWMCON1;
+	#define PWMCON1_PWMMOD (SET_BIT7 | SET_BIT6)
+	#define PWMCON1_GP 		SET_BIT5
+	#define PWMCON1_PWMTYP 	SET_BIT4
+	#define PWMCON1_FBINEN 	SET_BIT3
+	#define PWMCON1_PWMDIV (SET_BIT2 | SET_BIT1 | SET_BIT0)
 
 __sfr __at(0xE0) ACC;
 __sfr __at(0xE1) ADCCON1;
@@ -1878,16 +1895,17 @@ __sfr __at(0xFF) EIPH1;
 * For PWM setting
 *****************************************************************************************/
 //--------- PMW clock source select define ---------------------
-#define	PWM_CLOCK_FSYS			CKCON&=0xBF
-#define	PWM_CLOCK_TIMER1		CKCON|=0x40
+#define	PWM_CLOCK_FSYS			CKCON &= 0xBF
+#define	PWM_CLOCK_TIMER1		CKCON |= 0x40
 //--------- PWM clock divide define ----------------------------
+#define	PWM_CLOCK_DIV_1			(PWMCON1 &= 0xF8)
 #define	PWM_CLOCK_DIV_2			do{PWMCON1|=0x01;PWMCON1&=0xF9;}while(0)
 #define	PWM_CLOCK_DIV_4			do{PWMCON1|=0x02;PWMCON1&=0xFA;}while(0)
 #define	PWM_CLOCK_DIV_8			do{PWMCON1|=0x03;PWMCON1&=0xFB;}while(0)
 #define	PWM_CLOCK_DIV_16		do{PWMCON1|=0x04;PWMCON1&=0xFC;}while(0)
 #define	PWM_CLOCK_DIV_32		do{PWMCON1|=0x05;PWMCON1&=0xFD;}while(0)
 #define	PWM_CLOCK_DIV_64		do{PWMCON1|=0x06;PWMCON1&=0xFE;}while(0)
-#define	PWM_CLOCK_DIV_128		do{PWMCON1|=0x07
+#define	PWM_CLOCK_DIV_128		(PWMCON1 |= 0x07)
 //--------- PWM I/O select define ------------------------------
 // P1.5 as PWM5 output enable
 #define	PWM5_P15_OUTPUT_ENABLE	do{SET_EA_TA;SFRS=0x01;PIOCON1|=0x20;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
@@ -1946,35 +1964,35 @@ __sfr __at(0xFF) EIPH1;
 #define	PWM1_OUTPUT_NORMAL		PNP&=0xFD
 #define	PWM0_OUTPUT_NORMAL		PNP&=0xFE
 #define	PWM_OUTPUT_ALL_NORMAL	PNP=0x00
-//--------- PWM type define ------------------------------------
+/*------------------------ PWM type define -----------------------------------*/
 #define	PWM_EDGE_TYPE			PWMCON1&=~SET_BIT4
 #define	PWM_CENTER_TYPE			PWMCON1|=SET_BIT4
-//--------- PWM mode define ------------------------------------
+/*------------------------ PWM mode define -----------------------------------*/
 #define	PWM_IMDEPENDENT_MODE	PWMCON1&=0x3F
-#define	PWM_COMPLEMENTARY_MODE	PWMCON1|=0x40;PWMCON1&=0x7F;}while(0)
-#define	PWM_SYNCHRONIZED_MODE	PWMCON1|=0x80;PWMCON1&=0xBF;}while(0)
+#define	PWM_COMPLEMENTARY_MODE	do{PWMCON1|=0x40;PWMCON1&=0x7F;}while(0)
+#define	PWM_SYNCHRONIZED_MODE	do{PWMCON1|=0x80;PWMCON1&=0xBF;}while(0)
 #define PWM_GP_MODE_ENABLE		PWMCON1|=0x20
 #define	PWM_GP_MODE_DISABLE		PWMCON1&=0xDF
-//--------- PMW interrupt setting ------------------------------
+/*------------------------ PMW interrupt setting -----------------------------*/
 #define	PWM_FALLING_INT			do{SET_EA_TA;SFRS=0x01;PWMINTC&=0xCF;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_RISING_INT			do{SET_EA_TA;SFRS=0x01;PWMINTC|=0x10;PWMCON0&=0xDF;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_CENTRAL_POINT_INT	do{SET_EA_TA;SFRS=0x01;PWMINTC|=0x20;PWMCON0&=0xEF;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_PERIOD_END_INT		do{SET_EA_TA;SFRS=0x01;PWMINTC|=0x30;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
-//--------- PWM interrupt pin select ---------------------------
+/*----------------------- PWM interrupt pin select ---------------------------*/
 #define	PWM_INT_PWM0	do{SET_EA_TA;SFRS=0x01;PWMINTC&=0xF8;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_INT_PWM1	do{SET_EA_TA;SFRS=0x01;PWMINTC&=0xF8;PWMINTC|=0x01;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_INT_PWM2	do{SET_EA_TA;SFRS=0x01;PWMINTC&=0xF8;PWMINTC|=0x02;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_INT_PWM3	do{SET_EA_TA;SFRS=0x01;PWMINTC&=0xF8;PWMINTC|=0x03;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_INT_PWM4	do{SET_EA_TA;SFRS=0x01;PWMINTC&=0xF8;PWMINTC|=0x04;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
 #define	PWM_INT_PWM5	do{SET_EA_TA;SFRS=0x01;PWMINTC&=0xF8;PWMINTC|=0x05;SET_TA;SFRS=0x00;EA=EA_SAVE;}while(0)
-//--------- PWM Dead time setting ------------------------------
+/*------------------------ PWM Dead time setting -----------------------------*/
 #define PWM45_DEADTIME_ENABLE	do{SET_EA_TA;__asm__("orl _PDTEN,#0x04");EA=EA_SAVE;}while(0)
 #define PWM34_DEADTIME_ENABLE	do{SET_EA_TA;__asm__("orl _PDTEN,#0x02");EA=EA_SAVE;}while(0)
 #define PWM01_DEADTIME_ENABLE	do{SET_EA_TA;__asm__("orl _PDTEN,#0x01");EA=EA_SAVE;}while(0)
 
-/*****************************************************************************************
+/*******************************************************************************
 * For ADC INIT setting
-*****************************************************************************************/
+*******************************************************************************/
 // P17
 #define Enable_ADC_AIN0		do{ADCCON0&=0xF0;P17_Input_Mode;AINDIDS=0x00;AINDIDS|=SET_BIT0;ADCCON1|=SET_BIT0;}while(0)
 // P30
@@ -2013,14 +2031,35 @@ __sfr __at(0xFF) EIPH1;
 #define P04_RISINGEDGE_TRIG_ADC		do{ADCCON0|=0x30;ADCCON1&=~SET_BIT3;ADCCON1|=SET_BIT2;ADCCON1|=SET_BIT1;ADCCON1&=~SET_BIT6;}while(0)
 #define P13_RISINGEDGE_TRIG_ADC		do{ADCCON0|=0x30;ADCCON1&=~SET_BIT3;ADCCON1|=SET_BIT2;ADCCON1|=SET_BIT1;ADCCON1|=SET_BIT6;}while(0)
 
-/*****************************************************************************************
+/*******************************************************************************
 * For SPI INIT setting
-*****************************************************************************************/
+*******************************************************************************/
 #define	SPICLK_DIV2				do{clr_SPR0;clr_SPR1;}while(0)
 #define	SPICLK_DIV4				do{set_SPR0;clr_SPR1;}while(0)
 #define	SPICLK_DIV8				do{clr_SPR0;set_SPR1;}while(0)
 #define	SPICLK_DIV16			do{set_SPR0;set_SPR1;}while(0)
 #define	Enable_SPI_Interrupt	do{set_ESPI;set_EA;}while(0)
 #define	SS						P15
+
+/**
+ * Set of General Purpose/User Defiend Flags (or bits)
+ */
+#define set_gf0() (PCON |= SET_BIT2)
+#define set_gf1() (PCON |= SET_BIT3)
+#define set_gf2() (AUXR1 |= SET_BIT3)
+#define set_f0() (F0 = 1) /* PSW | SET_BIT5 */
+#define set_f1() (F1 = 1) /* PSW | SET_BIT1 */
+
+#define get_gf0() (PCON & SET_BIT2)
+#define get_gf1() (PCON & SET_BIT3)
+#define get_gf2() (AUXR1 & SET_BIT3)
+#define get_f0() F0 /* PSW & SET_BIT5 */
+#define get_f1() F1 /* PSW & SET_BIT1 */
+
+#define clr_gf0() (PCON &= ~SET_BIT2)
+#define clr_gf1() (PCON &= ~SET_BIT3)
+#define clr_gf2() (AUXR1 &= ~SET_BIT3)
+#define clr_f0() (F0 = 0) /* PSW &= ~SET_BIT5, not for use by ISR */
+#define clr_f1() (F1 = 0) /* PSW &= ~SET_BIT1, not for use by ISR */
 
 #endif

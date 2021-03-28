@@ -32,7 +32,9 @@ static const uint8_t br_reload[7][2] = {
 	{0xFF, 0xF7}   // 65527 115200   115277.7778 -0.067
 };
 #else
+#ifndef FOSC_16000
 #define FOSC_16000
+#endif
 static const uint8_t br_reload[7][2] = {
 	// RHx  RLx        Value Baudrate Actual       Error %
 	{ 0xFE, 0x5F }, // 65119   2400   2398.081535  0.079
@@ -66,30 +68,30 @@ void uart_init(enum UART_BR baudrate, bool rx_enable)
 #endif
 
 #if USE_UART == 0
-	SCON = 0x40;  // UART0 Mode 1
-	set_SMOD;		// UART0 Double Rate Enable
-	set_BRCK;		// Timer 3 as UART0 baud rate clock source
+	SCON = 0x40;  	/* UART0 Mode 1 */
+	set_SMOD;		/* UART0 Double Rate Enable */
+	set_BRCK;		/* Timer 3 as UART0 baud rate clock source */
 
-	P06_Quasi_Mode;	// UART0 TX pin
+	P06_Quasi_Mode;	/* UART0 TX pin */
 
 	if (rx_enable) {
-		P07_Quasi_Mode;	// UART0 RX pin
-		set_REN;		// Receive enabled
+		P07_Quasi_Mode;	/* UART0 RX pin */
+		set_REN;		/* Receive enabled */
 	}
 #elif USE_UART == 1
-	SCON_1 = 0x40;	// UART1 Mode 1
+	SCON_1 = 0x40;		/* UART1 Mode 1 */
 
-	P16_Quasi_Mode;	// UART1 TX pin
+	P16_Quasi_Mode;		/* UART1 TX pin */
 	if (rx_enable) {
-		P02_Quasi_Mode;	// UART1 RX pin
-		set_REN_1;		// Receive enabled
+		P02_Quasi_Mode;	/* UART1 RX pin */
+		set_REN_1;		/* Receive enabled */
 	}
 #endif
 	RH3 = br_reload[baudrate][0];
 	RL3 = br_reload[baudrate][1];
-	T3CON &= 0xF8;	// set pre-scale 1/1
+	T3CON &= 0xF8;	/* set pre-scale 1/1 */
 	tx_empty = 1;
-	set_TR3;		// start Timer 3
+	set_TR3;		/* start Timer 3 */
 }
 
 void uart_interrupt_handler(void) INTERRUPT(IRQ_UART,IRQ_UART_REG_BANK)
@@ -175,7 +177,7 @@ void uart_puth(uint8_t val)
 	uart_putc(hex);
 }
 
-/** print uint16_t in dec format */
+/** print uint16_t in dec format left alighted */
 void uart_putn(uint16_t val)
 {
 	if (val == 0) {
@@ -193,4 +195,36 @@ void uart_putn(uint16_t val)
 		val -= byte * div;
 		div /= 10;
 	}
+	return;
+}
+
+static __xdata uint8_t nbuf[6];
+
+/** print uint16_t in dec format right alignegd */
+void uart_putrn(uint16_t val)
+{
+	uint8_t print;
+	for (print = 0; print < 5; print++)
+		nbuf[print] = ' ';
+
+	nbuf[print] = '\0';
+	if (val == 0)
+		nbuf[4] = '0';
+	else {
+		uint16_t div = 10000;
+		print = 0;
+		for (uint8_t i = 0; i < 5; i++) {
+			uint8_t byte = val / div;
+			if (byte)
+				print++;
+			if (print)
+				nbuf[i] = byte + '0';
+			val -= byte * div;
+			div /= 10;
+		}
+	}
+
+	for (print = 0; print < 5; print++)
+		uart_putc(nbuf[print]);
+	return;
 }

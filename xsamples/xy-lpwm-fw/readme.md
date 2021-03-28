@@ -62,3 +62,15 @@ Also you can swap inrement/decrement keys:
 ## out on|off|negative|direct command
 ``out on|off`` - turn PWM signal output ON or OFF
 ``out negative|direct`` - set PWM signal output to negative or direct
+
+## Used code and data memory
+```
+   Name              Start    End  Size   Max Spare
+   ---------------- ------ ------ ----- ----- -----------
+   REG BANKS        0x0000 0x000F     2     4     2
+   IDATA            0x0000 0x007D   126   256   130
+   OVERLAYS                           3
+   STACK            0x007E 0x00FF   130   248   130
+   EXTERNAL RAM     0x0001 0x00db   219   768   549 71.5% free
+   ROM/EPROM/FLASH  0x0000 0x2506  9479 18432  8953 48.6% free
+```

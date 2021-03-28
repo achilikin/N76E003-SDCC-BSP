@@ -2,7 +2,6 @@
 
 #include <iap.h>
 #include <irq.h>
-#include <pwm.h>
 #include <adc.h>
 #include <dump.h>
 #include <uart.h>
@@ -11,6 +10,7 @@
 
 #include "main.h"
 #include "cfg.h"
+#include "pwm_range.h"
 
 #define APP_VERSION "2007.28"
 

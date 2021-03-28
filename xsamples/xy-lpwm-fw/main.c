@@ -3,7 +3,6 @@
 #include <iap.h>
 #include <i2c.h>
 #include <key.h>
-#include <pwm.h>
 #include <adc.h>
 #include <tick.h>
 #include <uart.h>
@@ -14,6 +13,7 @@
 
 #include "main.h"
 #include "cfg.h"
+#include "pwm_range.h"
 
 /*
  * define up to 8 key names - one key per bit
@@ -259,6 +259,51 @@ void set_pwm_duty(uint8_t duty)
 		pwm_channel_enable(PWM_CHANNEL, false);
 		pwm_channel_set_duty(PWM_CHANNEL, duty);
 	}
+}
+
+/**
+ * converts string to PWM value
+ * @param str 4 chars, 'k' specifying kHz range
+ *   kxxx: 1 to 999 Hz
+ *   xkxx: 1 to 9.99 kHz
+ *   xxkx: 10 to 99.9 kHz
+ *   xxxk: 100 to 160 kHz
+ */
+uint16_t pwm_str2freq(__idata char *str)
+{
+	uint8_t i, idx, pos;
+	__idata char buf[4];
+
+	for(i = idx = pos = 0; i < 4; i++) {
+		if (str[i] == 'k') {
+			pos = i;
+			continue;
+		}
+		if ((str[i] < '0') || (str[i] > '9'))
+			break;
+		buf[idx] = str[i];
+		idx++;
+	}
+	if (idx != 3)
+		return 0;
+	buf[idx] = '\0';
+
+	uint16_t freq = argtou(buf, &str);
+	uint8_t range = PWM_RANGE_1HZ;
+
+	if (freq == 0)
+		freq = 1;
+
+	if (pos > 0)
+		range = PWM_RANGE_100HZ + pos;
+	if ((range == PWM_RANGE_1HZ) && (freq > 99))
+		range = PWM_RANGE_100HZ;
+	if ((range == PWM_RANGE_100KHZ) && (freq > 160))
+		freq = 160;
+
+	freq |= range << 12;
+
+	return freq;
 }
 
 void key_pwm(uint8_t evt, uint8_t key)

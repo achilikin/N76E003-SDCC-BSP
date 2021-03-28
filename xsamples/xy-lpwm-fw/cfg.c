@@ -9,8 +9,8 @@
 #include <N76E003.h>
 #include <iap.h>
 
-#include "pwm.h"
 #include "cfg.h"
+#include "pwm_range.h"
 
 cfg_t cfg;
 

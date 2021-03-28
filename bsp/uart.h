@@ -66,6 +66,10 @@ void uart_putc(uint8_t ch);
 
 /** print uint16_t in dec format */
 void uart_putn(uint16_t val);
+
+/** print uint16_t in dec format right alignegd */
+void uart_putrn(uint16_t val);
+
 /** print uint8_t in hex format */
 void uart_puth(uint8_t val);
 

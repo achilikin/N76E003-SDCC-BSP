@@ -31,6 +31,7 @@ SRCS += $(BSPDIR)/key.c
 
 SRCS += $(LIBDIR)/ht1621.c
 SRCS += $(LIBDIR)/lcd_lpwm.c
+SRCS += $(LIBDIR)/pwm_range.c
 
 SRCS += $(wildcard *.c)
 
