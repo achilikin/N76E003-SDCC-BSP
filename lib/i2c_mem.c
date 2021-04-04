@@ -37,7 +37,7 @@ static int8_t i2cmem_ack_poll(uint8_t op, uint8_t tout)
 		if (i2c_start(I2C_MEM | op) == I2C_EOK)
 			return I2C_EOK;
 		i2c_stop();
-	} while ((millis8() - ms) < tout);
+	} while (elapsed(ms) < tout);
 
 	return I2C_ESTART;
 }

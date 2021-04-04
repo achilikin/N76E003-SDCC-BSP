@@ -20,6 +20,8 @@
 
 ../../lib/dump.rel: ../../lib/dump.c ../../lib/dump.h ../../bsp/uart.h
 
+../../lib/sfrs.rel: ../../lib/sfrs.c ../../lib/dump.h ../../bsp/uart.h
+
 ../../lib/dht.rel: ../../lib/dht.c ../../lib/dht.h
 
 ../../lib/ds3231.rel: ../../lib/ds3231.c ../../lib/ds3231.h ../../bsp/i2c.h

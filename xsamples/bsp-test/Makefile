@@ -39,6 +39,7 @@ SRCS += $(BSPDIR)/iap_write.c
 SRCS += $(BSPDIR)/pinterrupt.c
 
 SRCS += $(LIBDIR)/dump.c
+SRCS += $(LIBDIR)/sfrs.c
 SRCS += $(LIBDIR)/dht.c
 SRCS += $(LIBDIR)/ds3231.c
 SRCS += $(LIBDIR)/i2c_mem.c

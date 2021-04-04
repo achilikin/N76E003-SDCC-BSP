@@ -35,7 +35,7 @@ static int8_t wait_si(void)
 	SI = 0;
 	ts = millis8();
 	while (SI == 0) {
-		if ((uint8_t)(millis8() - ts) >= tout)
+		if (elapsed(ts) >= tout)
 			return I2C_EWAIT;
 	}
 	return I2C_EOK;
@@ -75,7 +75,7 @@ int8_t i2c_stop(void)
 	SI = 0;
 	ts = millis8();
 	while (STO == 1) {
-		if ((uint8_t)(millis8() - ts) >= tout)
+		if (elapsed(ts) >= tout)
 			return I2C_ESTOP;
 	}
 

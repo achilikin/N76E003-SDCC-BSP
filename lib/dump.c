@@ -6,6 +6,28 @@
 #define XBUF_SIZE 16
 __xdata uint8_t xbuf[XBUF_SIZE];
 
+/** print dump header */
+void dump_header(void)
+{
+	uint8_t i;
+	uart_putsc("     |");
+	for (i = 0; i <= 0x0F; i++) {
+		uart_putc(' ');
+		uart_puth(i);
+	}
+	uart_putc(' ');
+	uart_putc('|');
+	uart_putc('\n');
+	uart_putsc("     +");
+	for (i = 0; i <= 0x0F; i++)
+		uart_putsc("---");
+	uart_putc('-');
+	uart_putc('+');
+	uart_putc('\n');
+
+	return;
+}
+
 void dump_xbuf(uint16_t addr, uint8_t len)
 {
 	uint8_t i, data;

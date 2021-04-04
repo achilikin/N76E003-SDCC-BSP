@@ -53,7 +53,7 @@ enum POWER_MODE {
 
 void wait(uint16_t msec, enum POWER_MODE mode);
 
-#define millis8()  ticks.milli8
+inline uint8_t millis8(void) { return ticks.milli8; }
 uint16_t millis(void);
 uint32_t millis32(void);
 
@@ -61,7 +61,7 @@ uint32_t millis32(void);
 #define idle(msec) wait(msec,MODE_IDLE)
 #define sleep(msec) wait(msec,MODE_POWER_DOWN)
 
-	/**
+/**
  * delay in microseconds, measured with oscilloscope:
  * mks real
  *   0   ~2
@@ -73,8 +73,12 @@ uint32_t millis32(void);
  * 100  ~99
  * 250 ~245
  */
-	void
-	delay_mks(uint16_t mks);
+void delay_mks(uint16_t mks);
+
+/* elapsed time */
+inline uint8_t elapsed(uint8_t ts) {
+	return (uint8_t)(ticks.milli8 - (uint8_t)ts);
+}
 
 #ifdef __cplusplus
 }

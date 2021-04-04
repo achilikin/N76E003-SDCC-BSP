@@ -22,7 +22,7 @@ static uint8_t dht_skip_bit(uint8_t val)
 	uint8_t ts = millis8();
 	while (DHT_PIN == val) {
 		counter++;
-		if ((uint8_t)(millis8() - ts) >= DHT_TIMEOUT)
+		if (elapsed(ts) >= DHT_TIMEOUT)
 			return 0;
 	}
 	if (!counter)

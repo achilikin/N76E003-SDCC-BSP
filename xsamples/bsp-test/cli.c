@@ -18,7 +18,7 @@
 #include "cfg.h"
 #include "ps2k.h"
 
-#define APP_VERSION "1904.16"
+#define APP_VERSION "2104.04"
 
 /* list of supported commands */
 const __code char cmd_list[] =
@@ -26,6 +26,7 @@ const __code char cmd_list[] =
 #ifdef MEM_DEBUG
 	"imem\n"
 	"cmem [$addr [$len]]\n" /* cmem x4780 to print last page */
+	"sfr [$addr]\n" /* dump all SFRs or the specified one */
 #endif
 	"reset\n"					 /* sw reset */
 	"delay $val [mks]\n"		 /* delay milli/micro second and generate markers */
@@ -182,6 +183,7 @@ int8_t test_cli(__idata char *cmd)
 			if ((addr + len) > APROM_SIZE)
 				len = APROM_SIZE - addr;
 		}
+		dump_header();
 		for (uint16_t n = 0; n < len; n += 16) {
 			dump_set_bufc((__code uint8_t *)addr, 16);
 			dump_xbuf(addr, 16);
@@ -193,12 +195,50 @@ int8_t test_cli(__idata char *cmd)
 
 	if (str_is(cmd, "imem")) {
 		arg = 0;
-		while(1)  {
+		dump_header();
+		while (1) {
 			dump_set_bufi(arg, 16);
 			dump_xbuf((uint16_t)arg, 16);
 			if (arg == (__idata char *)0xF0)
 				break;
 			arg += 16;
+		}
+		goto EOK;
+	}
+
+	if (str_is(cmd, "sfr")) {
+		uint8_t sfr;
+		if (*arg) {
+			sfr = argtou(arg, &arg);
+			if (sfr >= 0x80) {
+				i = sfr_read(sfr);
+				uart_puth(i);
+				uart_putc(' ');
+				sfr_page(1);
+				i = sfr_read(sfr);
+				uart_puth(i);
+				uart_putc('\n');
+				sfr_page(0);
+				goto EOK;
+			}
+			goto EARG;
+		}
+
+		/* print page 0 */
+		dump_header();
+		for (i = 0; i <= 0x7F; i++) {
+			xbuf[i & 0x0F] = sfr_read(i + 0x80);
+			if ((i & 0x0F) == 0x0F)
+				dump_xbuf((i & 0xF0) | 0x80, 16);
+		}
+		uart_putsc(" page 1:\n");
+		/* print page 1 */
+		for (i = 0; i <= 0x7F; i++) {
+			sfr_page(1);
+			xbuf[i & 0x0F] = sfr_read(i + 0x80);
+			sfr_page(0);
+			if ((i & 0x0F) == 0x0F)
+				dump_xbuf((i & 0xF0) | 0x80, 16);
 		}
 		goto EOK;
 	}
@@ -270,6 +310,7 @@ int8_t test_cli(__idata char *cmd)
 				len = argtou(arg, &arg);
 			if (len == 0)
 				len = I2C_MEM_SIZE - addr;
+			dump_header();
 			for (; len >= XBUF_SIZE; addr += XBUF_SIZE) {
 				i2cmem_read_xdata(addr, xbuf, XBUF_SIZE);
 				dump_xbuf(addr, XBUF_SIZE);
@@ -429,7 +470,7 @@ int8_t test_cli(__idata char *cmd)
 		if (*arg) {
 			i = millis8();
 			while(kbd_cmd_pending()) {
-				if ((millis8() - i) > 100)
+				if (elapsed(i) > 100)
 					return CLI_ENODEV;
 			}
 			i = argtou(arg, &arg);
@@ -437,7 +478,7 @@ int8_t test_cli(__idata char *cmd)
 		}
 		i = millis8();
 		while (kbd_cmd_pending()) {
-			if ((millis8() - i) > 100)
+			if (elapsed(i) > 100)
 				return CLI_ENODEV;
 		}
 		goto EOK;
