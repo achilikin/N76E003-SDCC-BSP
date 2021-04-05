@@ -90,7 +90,7 @@ CMD:
     pcf init
     pcf led on|off
     pcf cursor on|off
-    pcf goto 1-4 [1-16]
+    pcf goto $line [$pos]
     rtc init
     rtc dump
     rtc time [hh:mm:ss]
@@ -108,7 +108,7 @@ Even with so many commands there is still some resources available:
    OVERLAYS                           3
    STACK            0x008C 0x00FF   116   248   116
    EXTERNAL RAM     0x0001 0x00ec   236   768   532 69.3% free
-   ROM/EPROM/FLASH  0x0000 0x3cb1 15538 18432  2894 15.7% free
+   ROM/EPROM/FLASH  0x0000 0x3cb9 15546 18432  2886 15.7% freertc time 21:00
 ```
 
 ## imem
@@ -310,7 +310,7 @@ Common LCD controller using I2C PCF8574 I/O extender. Controls 16x4 LCD in this 
 ``pcf init`` initializes LCD in 4bit mode and set 16x4 configuration.
 ``pcf led on|off`` controls backlight LED.
 ``pcf cursor on|off`` turns cursor ON or OFF.
-``pcf goto 1-4 [1-16]`` sets cursor position.
+``pcf goto $line [$pos]`` sets cursor position, line from 1 to L, and pos from 1 to N. L and N depend on values defined in the Makefile.
 
 ## rtc
 Commands to control RTC DS3231

@@ -18,7 +18,7 @@
 #include "cfg.h"
 #include "ps2k.h"
 
-#define APP_VERSION "2104.04"
+#define APP_VERSION "2104.05"
 
 /* list of supported commands */
 const __code char cmd_list[] =
@@ -54,7 +54,7 @@ const __code char cmd_list[] =
 	"pcf init\n"
 	"pcf led on|off\n"
 	"pcf cursor on|off\n"
-	"pcf goto 1-4 [1-16]\n"
+	"pcf goto $line [$pos]\n"
 #endif
 	"rtc init\n"
 	"rtc dump\n"
@@ -376,12 +376,12 @@ int8_t test_cli(__idata char *cmd)
 		if (str_is(arg, "goto")) {
 			arg = get_arg(arg);
 			i = argtou(arg, &arg);
-			if ((i < 1) || (i > 4))
+			if ((i < 1) || (i > PCF8574_LINES))
 				goto EARG;
 			uint8_t col = 1;
 			if (*arg)
 				col = argtou(arg, &arg);
-			if ((col < 1) || (col > 16))
+			if ((col < 1) || (col > PCF8574_CHARS))
 				goto EARG;
 			pcf_goto(i - 1, col - 1);
 			goto EOK;
@@ -526,8 +526,10 @@ int8_t test_cli(__idata char *cmd)
 				data = argtou(arg + 1, &arg);
 				ds3231[DS3231_REG_SEC] = tobcd(data);
 				ds3231_write(DS3231_REG_SEC, 3);
-			} else
+			} else {
 				rtc_print_time();
+				uart_putc('\n');
+			}
 			goto EOK;
 		}
 		if (str_is(arg, "32k")) {

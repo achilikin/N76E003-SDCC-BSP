@@ -186,10 +186,14 @@ void pcf_home(void)
 void pcf_goto(uint8_t line, uint8_t col)
 {
 	/**
-	 * TODO: different displays have different addresses
+	 * TODO: different displays have different addresses for 16 chars?
 	 * by default use Ampire AC-164A addressing
 	 */
+#if (PCF8574_CHARS == 16)
 	uint8_t row_offsets[] = {0x00, 0x40, 0x10, 0x50};
+#else
+	uint8_t row_offsets[] = {0x00, 0x40, 0x14, 0x54};
+#endif
 	if ((line < PCF8574_LINES) && (col < PCF8574_CHARS)) {
 		pcf_send_cmd(LCD_SETDDRAMADDR | (row_offsets[line] + col));
 		cur_line = line;

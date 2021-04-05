@@ -15,6 +15,8 @@ HIRC_TRIM = 19
 USE_BV4618_LCD = true
 ## use PCF8574 LCD controller board
 USE_PCF8574_LCD = true
+PCF8574_LINES = 4
+PCF8574_CHARS = 20
 ## set to true to compile debug calls
 MEM_DEBUG = true
 DHT_DEBUG = false
@@ -108,7 +110,7 @@ ifeq ($(USE_BV4618_LCD),true)
 CFLAGS += -DUSE_BV4618_LCD
 endif
 ifeq ($(USE_PCF8574_LCD),true)
-CFLAGS += -DUSE_PCF8574_LCD
+CFLAGS += -DUSE_PCF8574_LCD -DPCF8574_LINES=$(PCF8574_LINES) -DPCF8574_CHARS=$(PCF8574_CHARS)
 endif
 
 LDFLAGS  = -m$(ARCH) -l$(ARCH) --out-fmt-ihx
