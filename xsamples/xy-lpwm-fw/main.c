@@ -249,16 +249,12 @@ void print_off(uint8_t dstart)
 
 void set_pwm_duty(uint8_t duty)
 {
-	if (duty == 0) {
-		pwm_channel_enable(PWM_CHANNEL, true);
-		pwm_channel_set_level(PWM_CHANNEL, 0);
-	} else if (duty == 100) {
-		pwm_channel_enable(PWM_CHANNEL, true);
-		pwm_channel_set_level(PWM_CHANNEL, 1);
-	} else {
-		pwm_channel_enable(PWM_CHANNEL, false);
-		pwm_channel_set_duty(PWM_CHANNEL, duty);
-	}
+	if (duty == 0)
+		pwm_channel_set_mode(PWM_CHANNEL, PWM_MODE_LOW);
+	else if (duty == 100)
+		pwm_channel_set_mode(PWM_CHANNEL, PWM_MODE_HIGH);
+	else
+		pwm_channel_set_mode(PWM_CHANNEL, PWM_MODE_RUN);
 }
 
 /**

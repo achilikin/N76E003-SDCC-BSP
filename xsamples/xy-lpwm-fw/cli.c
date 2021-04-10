@@ -12,7 +12,7 @@
 #include "cfg.h"
 #include "pwm_range.h"
 
-#define APP_VERSION "2007.28"
+#define APP_VERSION "2104.10"
 
 #if (TARGET_BOARD == VHM_800_BOARD)
 	#define BOARD_NAME "VHM-800"
@@ -112,7 +112,7 @@ int8_t lpwm_cli(__idata char *cmd)
 
 	if (str_is(cmd, "out")) {
 		if (str_is(arg, "on")) {
-			pwm_channel_enable(PWM_CHANNEL, false);
+			pwm_channel_enable(PWM_CHANNEL, true);
 			pwm_start();
 			print_freq(cfg.freq);
 			print_range(cfg.range);
@@ -124,7 +124,7 @@ int8_t lpwm_cli(__idata char *cmd)
 		}
 		if (str_is(arg, "off")) {
 			pwm_stop();
-			pwm_channel_enable(PWM_CHANNEL, true);
+			pwm_channel_enable(PWM_CHANNEL, false);
 			pwm_channel_set_level(PWM_CHANNEL, !(cfg.flags & CGF_PWM_DIRECT));
 			lcd_set_sign(LCD_SIG_OUT, false);
 			cfg.flags &= ~CGF_PWM_RUN;

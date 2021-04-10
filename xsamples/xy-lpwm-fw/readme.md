@@ -72,5 +72,5 @@ Also you can swap inrement/decrement keys:
    OVERLAYS                           3
    STACK            0x007E 0x00FF   130   248   130
    EXTERNAL RAM     0x0001 0x00db   219   768   549 71.5% free
-   ROM/EPROM/FLASH  0x0000 0x2506  9479 18432  8953 48.6% free
+   ROM/EPROM/FLASH  0x0000 0x24e7  9448 18432  8984 48.7% free
 ```

@@ -30,8 +30,7 @@ void pwm_init_timer(void)
 	for (uint8_t i = 0; i < PWM_NUM_CHANNELS; i++)
 		pwm_duty[i] = 0;
 
-	// TODO: Why SET_BIT3? Should be SET_BIT4 for T#1 ?
-	CKCON |= SET_BIT3; /* run TIM1 in compatibility mode */
+	CKCON &= ~CKCON_T1M; /* clear T1M to run TIM1 in compatibility mode: Fsys/12 */
 	/* TIM1 should be set to reload mode for PWM_RANGE_1HZ */
 	TMOD &= 0x0F; /* clear TIM1 config */
 	TMOD |= 0x20; /* set mode 2 - auto-reload from TH1 */
