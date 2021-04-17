@@ -26,22 +26,22 @@ const __code char cmd_list[] =
 #ifdef MEM_DEBUG
 	"imem\n"
 	"cmem [$addr [$len]]\n" /* cmem x4780 to print last page */
-	"sfr [$addr]\n" /* dump all SFRs or the specified one */
+	"sfr [$addr]\n"			/* dump all SFRs or the specified one */
 #endif
-	"reset\n"					 /* sw reset */
-	"delay $val [mks]\n"		 /* delay milli/micro second and generate markers */
-	"rctrim save\n"				 /* save new RC trim value */
-	"rctrim [$trim]\n"			 /* apply new RC trim value */
-	"i2c scan|stop\n"			 /* scan I2C bus for valid addresses */
+	"reset\n"						 /* sw reset */
+	"delay $val [mks]\n"			 /* delay milli/micro second and generate markers */
+	"rctrim save\n"					 /* save new RC trim value */
+	"rctrim [$trim]\n"				 /* apply new RC trim value */
+	"i2c scan|stop\n"				 /* scan I2C bus for valid addresses */
 	"i2c wr $addr $val [$val ...]\n" /* write data  */
-	"i2cmem erase [$fill]\n"	 /* erase EEPROM memory using fill character, 0xFF by default */
-	"i2cmem read $addr\n" 		 /* read one byte from i2c EEPROM memory */
-	"i2cmem write $addr $val\n"  /* write one byte to i2c EEPROM memory */
-	"i2cmem dump [$addr] [$len]\n" /* dump i2c EEPROM memory */
-	"dht\n"						 /* read DHT sensor */
+	"i2cmem erase [$fill]\n"		 /* erase EEPROM memory using fill character, 0xFF by default */
+	"i2cmem read $addr\n"			 /* read one byte from i2c EEPROM memory */
+	"i2cmem write $addr $val\n"		 /* write one byte to i2c EEPROM memory */
+	"i2cmem dump [$addr] [$len]\n"	 /* dump i2c EEPROM memory */
+	"dht\n"							 /* read DHT sensor */
 	"kbd $cmd [$arg]\n"
-	"timer on|off\n"			 /* print info every second */
-	"timer lcd|uart on|off\n"	 /* toggle LCD/UART output */
+	"timer on|off\n"		  /* print info every second */
+	"timer lcd|uart on|off\n" /* toggle LCD/UART output */
 #ifdef USE_BV4618_LCD /* use BV4618 controller for 4x20 LCD character display */
 	"bv cls\n"		  /* clear screen */
 	"bv clr\n"		  /* clear line to the right */
