@@ -241,17 +241,17 @@ Found device: 0x68 (0xD0)
 To write data to I2C device use ``i2c wr`` command. For example, to initialize [HT16K33](https://www.holtek.com/documents/10179/116711/HT16K33v120.pdf) based quad alphanumeric display:
 
 ```
-> i2c wr x70 x21 // turn on system oscillator
-> i2c wr x70 0 0 0 0 0 0 0 0   // clear all segments
-> i2c wr x70 x81 // turn on display
-> i2c wr x70 0 xFF x7F xFF x7F // set all segments for the first two digits
-> i2c wr x70 4 xFF x7F xFF x7F // set all segments for the second two digits
-> i2c wr x70 x83 // 2Hz blink
-> i2c wr x70 x85 // 1Hz blink
-> i2c wr x70 x87 // 0.5Hz blink
-> i2c wr x70 xE0 // set dimming level 0
-> i2c wr x70 xEF // set dimming level 15
-> i2c wr x70 x80 // turn display off
+> i2c wr x70 x21                   // turn on system oscillator
+> i2c wr x70 0 0 0 0 0 0 0 0       // clear all segments
+> i2c wr x70 x81                   // turn on display
+> i2c wr x70 0 xFF x7F xFF x7F     // set all segments for the first two digits
+> i2c wr x70 4 xFF x7F xFF x7F     // set all segments for the second two digits
+> i2c wr x70 x83                   // 2Hz blink
+> i2c wr x70 x85                   // 1Hz blink
+> i2c wr x70 x87                   // 0.5Hz blink
+> i2c wr x70 xE0                   // set dimming level 0
+> i2c wr x70 xEF                   // set dimming level 15
+> i2c wr x70 x80                   // turn display off
 ```
 
 ## i2cmem
