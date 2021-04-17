@@ -72,7 +72,7 @@ CMD:
     rctrim save
     rctrim [$trim]
     i2c scan|stop
-	i2c wr $addr $val [$val ...]
+    i2c wr $addr $val [$val ...]
     i2cmem erase [$fill]
     i2cmem read $addr
     i2cmem write $addr $val
