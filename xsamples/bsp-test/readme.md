@@ -72,6 +72,7 @@ CMD:
     rctrim save
     rctrim [$trim]
     i2c scan|stop
+	i2c wr $addr $val [$val ...]
     i2cmem erase [$fill]
     i2cmem read $addr
     i2cmem write $addr $val
@@ -108,7 +109,7 @@ Even with so many commands there is still some resources available:
    OVERLAYS                           3
    STACK            0x008C 0x00FF   116   248   116
    EXTERNAL RAM     0x0001 0x00ec   236   768   532 69.3% free
-   ROM/EPROM/FLASH  0x0000 0x3cb9 15546 18432  2886 15.7% freertc time 21:00
+   ROM/EPROM/FLASH  0x0000 0x3d24 15653 18432  2779 15.1% free
 ```
 
 ## imem
@@ -236,6 +237,22 @@ Found device: 0x68 (0xD0)
 0x68 address for RTC DS3231
 
 ``i2c stop`` will send ``stop`` condition to the bus.
+
+To write data to I2C device use ``i2c wr`` command. For example, to initialize [HT16K33](https://www.holtek.com/documents/10179/116711/HT16K33v120.pdf) based quad alphanumeric display:
+
+```
+> i2c wr x70 x21 // turn on system oscillator
+> i2c wr x70 0 0 0 0 0 0 0 0   // clear all segments
+> i2c wr x70 x81 // turn on display
+> i2c wr x70 0 xFF x7F xFF x7F // set all segments for the first two digits
+> i2c wr x70 4 xFF x7F xFF x7F // set all segments for the second two digits
+> i2c wr x70 x83 // 2Hz blink
+> i2c wr x70 x85 // 1Hz blink
+> i2c wr x70 x87 // 0.5Hz blink
+> i2c wr x70 xE0 // set dimming level 0
+> i2c wr x70 xEF // set dimming level 15
+> i2c wr x70 x80 // turn display off
+```
 
 ## i2cmem
 Set of commands to deal with 24C32 memory chip.
