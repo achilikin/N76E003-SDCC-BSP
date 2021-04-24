@@ -56,7 +56,7 @@ There are a few different Nuvoton N76E003 development boards available online. T
 # Supported commands:
 ```
 > help
-VER: 2104.04 (15563 bytes)
+VER: 2104.24 (15874 bytes)
 CID: DA
 DID: 5036
 CFG: FF FF FF FF FF
@@ -72,7 +72,8 @@ CMD:
     rctrim save
     rctrim [$trim]
     i2c scan|stop
-    i2c wr $addr $val [$val ...]
+    i2c wr $dev $val [$val ...]
+    i2c read $dev $addr [$len]
     i2cmem erase [$fill]
     i2cmem read $addr
     i2cmem write $addr $val
@@ -109,7 +110,7 @@ Even with so many commands there is still some resources available:
    OVERLAYS                           3
    STACK            0x008C 0x00FF   116   248   116
    EXTERNAL RAM     0x0001 0x00ec   236   768   532 69.3% free
-   ROM/EPROM/FLASH  0x0000 0x3d24 15653 18432  2779 15.1% free
+   ROM/EPROM/FLASH  0x0000 0x3e01 15874 18432  2558 13.9% free
 ```
 
 ## imem
@@ -252,6 +253,12 @@ To write data to I2C device use ``i2c wr`` command. For example, to initialize [
 > i2c wr x70 xE0                   // set dimming level 0
 > i2c wr x70 xEF                   // set dimming level 15
 > i2c wr x70 x80                   // turn display off
+```
+
+To read data from I2C device (with re-start condition) use ``i2c read $dev $addr [$len]`` command. For example, to read MCP23017 I2C 16-Bit I/O Expander IODIRA and IODIRB registers in sequential 16 bit mode:
+```
+> i2c read x20 0 2
+ xFF xFF
 ```
 
 ## i2cmem

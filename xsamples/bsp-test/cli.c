@@ -18,7 +18,7 @@
 #include "cfg.h"
 #include "ps2k.h"
 
-#define APP_VERSION "2104.17"
+#define APP_VERSION "2104.24"
 
 /* list of supported commands */
 const __code char cmd_list[] =
@@ -33,7 +33,8 @@ const __code char cmd_list[] =
 	"rctrim save\n"					 /* save new RC trim value */
 	"rctrim [$trim]\n"				 /* apply new RC trim value */
 	"i2c scan|stop\n"				 /* scan I2C bus for valid addresses */
-	"i2c wr $addr $val [$val ...]\n" /* write data  */
+	"i2c wr $dev $val [$val ...]\n"  /* write data */
+	"i2c read $dev $addr [$len]\n"	 /* read data with re-start */
 	"i2cmem erase [$fill]\n"		 /* erase EEPROM memory using fill character, 0xFF by default */
 	"i2cmem read $addr\n"			 /* read one byte from i2c EEPROM memory */
 	"i2cmem write $addr $val\n"		 /* write one byte to i2c EEPROM memory */
@@ -75,7 +76,7 @@ static uint8_t icmd;
 
 int8_t test_cli(__idata char *cmd)
 {
-	uint8_t i;
+	uint8_t i, reg, n;
 	/* too many variables, put some of them to idata segment */
 	__idata uint16_t len;
 	__idata uint16_t addr;
@@ -297,6 +298,30 @@ int8_t test_cli(__idata char *cmd)
 					i2c_write(argtou(arg, &arg));
 			}
 			i2c_stop();
+			goto EOK;
+		}
+		if (str_is(arg, "read")) { /* read byte */
+			arg = get_arg(arg);
+			i = argtou(arg, &arg);
+			if (*arg == '\0')
+				goto EARG;
+			reg = argtou(arg, &arg);
+			n = argtou(arg, &arg);
+			if (n == 0)
+				n = 1;
+			if (i2c_start(i << 1) == I2C_EOK) {
+				i2c_write(reg);
+				if (i2c_start((i << 1) | I2C_READ) == I2C_EOK) {
+					while(n) {
+						i = i2c_read(n > 1);
+						uart_putsc(" x");
+						uart_puth(i);
+						n--;
+					}
+				}
+			}
+			i2c_stop();
+			uart_putln();
 			goto EOK;
 		}
 		goto EARG;
