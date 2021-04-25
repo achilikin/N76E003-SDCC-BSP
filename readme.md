@@ -56,7 +56,14 @@ Repository structure:
 
 [bsp-template](./xsamples/bsp-template/readme.md) provides skeleton example for the BSP.
 
-[bsp-test](./xsamples/bsp-test/readme.md) provides examples of connecting different sensors/devices to N76E003 development board.
+[bsp-test](./xsamples/bsp-test/readme.md) provides examples of connecting different sensors/devices to N76E003 development board:
+
+* DHT22 (AM2302) humidity/temperature sensor
+* RTC [DS3231](https://www.maximintegrated.com/en/products/analog/real-time-clocks/DS3231.html) with I2C EEPROM Atmel [24C32](https://ww1.microchip.com/downloads/en/DeviceDoc/doc0336.pdf) on board
+* 20x4 LCD with [BV4618](http://www.byvac.com/index.php/BV4618) as I2C controller
+* 16x4 LCD with [PCF8574](https://www.ti.com/lit/ds/symlink/pcf8574.pdf) as I2C controller
+* PS/2 Mini Keyboard UK Layout
+* [HT16K33](https://www.holtek.com/documents/10179/116711/HT16K33v120.pdf) based quad alphanumeric display
 
 [xy-lpwm-fw](./xsamples/xy-lpwm-fw/readme.md) and [xy-lpwm-lcd](./xsamples/xy-lpwm-lcd/readme.md) examples use popular XY-LPWM single channel PWM generator as a development board for N76E003.
 
