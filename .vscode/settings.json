@@ -19,4 +19,7 @@
 	"C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "sameLine",
 	"C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, UseTab: Always, IndentWidth: 4, TabWidth: 4, BreakBeforeBraces: Attach, AllowShortIfStatementsOnASingleLine: true, IndentCaseLabels: false, ColumnLimit: 0 }",
 	"C_Cpp.errorSquiggles": "Disabled",
+	"files.associations": {
+		"mcp23017.h": "c"
+	},
 }

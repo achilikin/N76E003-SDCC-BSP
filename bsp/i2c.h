@@ -8,8 +8,10 @@ extern "C" {
 #endif
 
 /* I2C Clock = Fsys / (4*(prescaler + 1)) */
-#define I2C_CLOCK_400K	(0x09 + 1)
-#define I2C_CLOCK_100K	(0x27 + 1)
+#define I2C_CLOCK_100K (40)
+#define I2C_CLOCK_400K (10)
+#define I2C_CLOCK_800K (4)
+#define I2C_CLOCK_1MHZ (3)
 
 /* defines the data direction (reading/writing from I2C device) in i2c_start() */
 #define I2C_READ    1

@@ -47,6 +47,7 @@ Repository structure:
 │   ├── bsp-pwm: testing PWM capabilities of N76E003
 │   ├── bsp-template: template project for the BSP
 │   ├── bsp-test: testing environment for bsp/lib
+│   ├── hpdl-1414: HPDL-1414 Alphanumeric display example
 │   ├── xy-lpwm-fw: alternative firmware for XY-LPWM and clones
 │   └── xy-lpwm-lcd: XY-LPWM LCD screen controlled by commands over serial port
 └── readme.md: this file
@@ -65,6 +66,7 @@ Repository structure:
 * PS/2 Mini Keyboard UK Layout
 * [HT16K33](https://www.holtek.com/documents/10179/116711/HT16K33v120.pdf) based quad alphanumeric display
 
+[hpdl-1414](./xsamples/hpdl-1414/readme.md) HPDL-1414 Alphanumeric display controlled using MCP23017 I2C 16-Bit I/O Expander
 [xy-lpwm-fw](./xsamples/xy-lpwm-fw/readme.md) and [xy-lpwm-lcd](./xsamples/xy-lpwm-lcd/readme.md) examples use popular XY-LPWM single channel PWM generator as a development board for N76E003.
 
 XY-LPWM3 with 3 PWM channels would be even better dev board as it provides 8 keys instead or 4 and 3 PWM outputs instead of 1, example with XY-LPWM3 TDB.
