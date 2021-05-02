@@ -398,8 +398,25 @@ __sfr __at(0xF0) B;
 __sfr __at(0xF1) CAPCON3;
 __sfr __at(0xF2) CAPCON4;
 __sfr __at(0xF3) SPCR;
+	#define SPCR_SSOE  SET_BIT7 /** SS output enable, 0: SS as a general I/O */
+	#define SPCR_SPIEN SET_BIT6 /** SPI enable */
+	#define SPCR_LSBFE SET_BIT5 /** LSB first enable, 0: MSB */
+	#define SPCR_MSTR  SET_BIT4 /** SPI mode select, 1: master */
+	#define SPCR_CPOL  SET_BIT3 /** SPI clock polarity select. 0: low in idle state*/
+	#define SPCR_CPHA  SET_BIT2 /** SPI clock phase select. 0: data sample on the first edge of the clock */
+	#define SPCR_SRR   (SET_BIT1 | SET_BIT0) /** SPI clock rate select */
+	#define SPI_CLOCK_8MHZ 0x00
+	#define SPI_CLOCK_4MHZ 0x01
+	#define SPI_CLOCK_2MHZ 0x02
+	#define SPI_CLOCK_1MHZ 0x03
 __sfr __at(0xF3) SPCR2; 	/* Access via page 1 */
 __sfr __at(0xF4) SPSR;
+	#define SPSR_SPIF 	 SET_BIT7 /** SPI complete flag */
+	#define SPSR_WCOL 	 SET_BIT6 /** write collision error flag */
+	#define SPSR_SPIOVF  SET_BIT5 /** SPI overrun error flag */
+	#define SPSR_MODF 	 SET_BIT4 /** mode fault error flag */
+	#define SPSR_DISMODF SET_BIT3 /** disable mode fault error flag */
+	#define SPSR_TXBUF 	 SET_BIT2 /** SPI write buffer status, 0: empty, 1: full */
 __sfr __at(0xF5) SPDR;
 __sfr __at(0xF6) AINDIDS;
 __sfr __at(0xF7) EIPH;
