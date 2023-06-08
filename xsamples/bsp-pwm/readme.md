@@ -3,23 +3,23 @@
 
 - [Nuvoton N76E003 development board](#nuvoton-n76e003-development-board)
 - [Supported commands:](#supported-commands)
-	- [> div](#-div)
-	- [> period](#-period)
-	- [> type](#-type)
-	- [> pwm](#-pwm)
-	- [> duty](#-duty)
-	- [> mask](#-mask)
-	- [> gpmode](#-gpmode)
-	- [> inttype](#-inttype)
-	- [opmode](#opmode)
-	- [> phases](#-phases)
-	- [> shift](#-shift)
+	- [\> div](#-div)
+	- [\> period](#-period)
+	- [\> type](#-type)
+	- [\> pwm](#-pwm)
+	- [\> duty](#-duty)
+	- [\> mask](#-mask)
+	- [\> gpmode](#-gpmode)
+	- [\> inttype](#-inttype)
+	- [\> opmode](#-opmode)
+	- [\> phases](#-phases)
+	- [\> shift](#-shift)
 
 
 # Nuvoton N76E003 development board
 There are a few different Nuvoton N76E003 development boards available online. This one was used for the test app:
 
-<img src="../bsp-test/img/n76e003.jpg" width="400px"/>
+<img src="../../img/n76e003.jpg" width="400px"/><img src="../../img/schematics.png" width="440px"/>
 
 ```
              N76E0003 dev board pinout:
@@ -27,18 +27,19 @@ There are a few different Nuvoton N76E003 development boards available online. T
                 N S L A D  5 V X X N
                 D T K T D  V 3 0 0 D
                 | | | | |  | | | | |
-                +------------------+
-        SDA  ---| P1.4         VDD |--- VDD
-        SCL  ---| P1.3         GND |--- GND
-        WCT  ---| P1.2        P1.5 |--- EPOLL
-        CLO  ---| P1.1        P1.6 |--- ICPDA [SDA]
-        MARK ---| P1.0        P1.7 |---
-             ---| P0.0        P3.0 |---
-             ---| P0.1        P2.0 |--- RST
-[SCL] ICPCLK ---| P0.2        P0.7 |--- UART0 RX
-   PS/2 DATA ---| P0.3        P0.6 |--- UART0 TX
-  PS/2 CLOCK ---| P0.4        P0.5 |--- DHT
-                +------------------+
+                +----------------------+
+             ---|11 P1.4         VDD 9 |--- VDD
+             ---|12 P1.3         GND 7 |--- GND
+        PWM0 ---|13 P1.2        P1.5 10|---
+        PWM1 ---|14 P1.1        P1.6 8 |--- DAT [ICP]
+        PWM2 ---|15 P1.0        P1.7 7 |---
+             ---|16 P0.0        P3.0 5 |---
+             ---|17 P0.1        P2.0 2 |--- RST [ICP]
+   [ICP] CLK ---|18 P0.2        P0.7 3 |--- UART0 RX
+             ---|19 P0.3        P0.6 2 |--- UART0 TX
+        MARK ---|20 P0.4        P0.5 1 |---
+                +----------------------+
+
 ```
 
 # Supported commands:
@@ -150,7 +151,7 @@ Period interrupt for ``center`` type:
 
 ![period](./img/int-period.png)
 
-## opmode
+## > opmode
 Select PWM operation mode:
 
 * independent: all channels configured independent of each other

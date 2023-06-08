@@ -5,7 +5,7 @@ with some defines to make [Visual Studio Code](https://code.visualstudio.com/) h
 
 BSP itself compressed into a couple of bsp/N76E003.h and bsp/N76E003.c files with multiple auxiliary APIs/drivers located in the ``bsp`` and ``lib`` folders.
 
-Originally BSP was developed with SDCC version 3.8.0 but should work fine with any more recent versions as well.
+Originally BSP was developed with SDCC version 3.8.0 but should work fine with any more recent versions as well (tested with SDCC versions up to 4.2.0).
 
 Repository structure:
 ```

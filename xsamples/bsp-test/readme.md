@@ -31,7 +31,7 @@
 ## Nuvoton N76E003 development board
 There are a few different Nuvoton N76E003 development boards available online. This one was used for the test app:
 
-<img src="./img/n76e003.jpg" width="400px"/>
+<img src="../../img/n76e003.jpg" width="400px"/><img src="../../img/schematics.png" width="440px"/>
 
 ```
              N76E0003 dev board pinout:
