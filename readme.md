@@ -101,6 +101,27 @@ There are a few different Nuvoton N76E003 development boards available online. T
 
 <img src="./img/schematics.png"/>
 
+Minimal configuration uses programmer pins and UART (38400 baud rate):
+```
+                  G R C D V    + 3 T R G
+                  N S L A D    5 V X X N
+                  D T K T D    V 3 0 0 D
+                  | | | | |    | | | | |
+                 +----------------------+
+              ---|11 P1.4         VDD 9 |--- VDD
+              ---|12 P1.3         GND 7 |--- GND
+              ---|13 P1.2        P1.5 10|---
+              ---|14 P1.1        P1.6 8 |--- DAT [ICP]
+              ---|15 P1.0        P1.7 7 |---
+              ---|16 P0.0        P3.0 5 |---
+              ---|17 P0.1        P2.0 2 |--- RST [ICP]
+    [ICP] CLK ---|18 P0.2        P0.7 3 |--- UART0 RX
+              ---|19 P0.3        P0.6 2 |--- UART0 TX
+              ---|20 P0.4        P0.5 1 |---
+                 +----------------------+
+```
+leaving 13 IO pins available.
+
 # Reference
 Nuvoton N76E003 official site https://www.nuvoton.com/products/microcontrollers/8bit-8051-mcus/low-pin-count-8051-series/n76e003/
 

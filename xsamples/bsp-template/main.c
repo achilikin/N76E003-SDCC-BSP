@@ -9,7 +9,7 @@
 #include "main.h"
 
 /*
-  * N76E0003 dev board pinout:
+ * N76E0003 dev board pinout:
  *                  G R C D V    + 3 T R G
  *                  N S L A D    5 V X X N
  *                  D T K T D    V 3 0 0 D
