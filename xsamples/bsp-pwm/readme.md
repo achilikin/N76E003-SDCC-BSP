@@ -70,11 +70,11 @@ Used code and data:
    OVERLAYS                           2
    STACK            0x0056 0x00FF   170   248   170
    EXTERNAL RAM     0x0001 0x00c7   199   768   569 74.1% free
-   ROM/EPROM/FLASH  0x0000 0x17f2  6131 18432 12301 66.7% free
+   ROM/EPROM/FLASH  0x0000 0x182c  6189 18432 12243 66.4% free
 ```
 
 ## > div
-Sets Fsys divider, one of the following: 1, 2, 4, 8, 16, 32, 64,128
+Sets Fsys divider, one of the following: 1, 2, 4, 8, 16, 32, 64, 128
 
 ## > period
 Sets PWM counter period, 16 bits value.

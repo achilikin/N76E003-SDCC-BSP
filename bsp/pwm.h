@@ -41,7 +41,17 @@ void pwm_channel_set_mode(uint8_t channel, enum pwm_mode_t mode);
 #define pwm_clock_fsys() (CKCON &= ~CKCON_PWMCKS) /** set PWM clock source to Fsys */
 #define pwm_start() PWMRUN = 1
 #define pwm_stop()  PWMRUN = 0
-#define pwm_clear() CLRPWM = 1
+#define pwm_clear() do{CLRPWM=1;while(CLRPWM);}while(0)
+
+/**
+ * writes to PWMPL/PWMPH registers, does not set LOAD.
+ * For edge aligned PWM frequency == Fpwm /({PWMPH,PWNPL} + 1),
+ * for center aligned PWM frequency == Fpwm /(2 * {PWMPH,PWNPL})
+ */
+void pwm_period_set(uint16_t period);
+
+/** reads from PWMPL/PWMPH registers */
+uint16_t pwm_period_get(void);
 
 /** reads from PWM#L/PWM#H registers */
 uint16_t pwm_duty_get(uint8_t channel);

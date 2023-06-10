@@ -14,6 +14,7 @@
             ],
             "cStandard": "c11",
             "cppStandard": "c++98",
+			"compilerPath": "",
             "intelliSenseMode": "linux-gcc-x86"
         }
     ],

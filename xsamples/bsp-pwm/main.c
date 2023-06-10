@@ -64,31 +64,26 @@ void main(void)
 	PWM_CLOCK_FSYS; /* select Fsys as PWM clock source */
 	/* set PWM clock to 1 MHz */
 	PWM_CLOCK_DIV_16;
-	CLRPWM = 1;
-	while (CLRPWM);
+	pwm_clear();
 	/* set PWM period to 1000 clocks, or 1kHz */
 	/* for edge aligned PWM frequency == Fpwm /({PWMPH,PWNPL} + 1) */
 	/* for center aligned PWM frequency == Fpwm /(2 * {PWMPH,PWNPL}) */
-	PWMPH = HIBYTE(999);
-	PWMPL = LOBYTE(999);
+	pwm_period_set(999);
 
-	/* default duty cicles for PWM0-3*/
-	PWM0H = 0;
-	PWM0L = 250;
-	PWM1H = HIBYTE(500);
-	PWM1L = LOBYTE(500);
-	PWM2H = HIBYTE(750);
-	PWM2L = LOBYTE(750);
+	/* default duty cycles for PWM0-3 */
+	pwm_duty_set(0, 250);
+	pwm_duty_set(1, 500);
+	pwm_duty_set(2, 750);
 
 	PWM_CENTER_TYPE; /* set pwm generator to center type */
 	set_opmode_phased();
 	set_inttype_period();
 	PMEN = 0x3F; /* mask off all outputs */
-	PMD = 0x00;	 /* set all outputs to 0, interrupt will driver them up */
+	PMD = 0x00;	 /* set all outputs to 0, interrupt will drive them up */
 
 	sti_pwm(); /* enable PWM interrupt */
 	LOAD = 1;
-	PWMRUN = 1;
+	pwm_start();
 
 	/** PWM configuration stop ************************************************/
 	/* events processing loop */
@@ -114,7 +109,7 @@ void main(void)
 
 uint8_t pmd_start = 0x01; /* default start channel 0 */
 uint8_t pmd_end = 0x04;	  /* default end channel 3 */
-uint8_t phase_shift = 0; /* default shift between channel 0 periods */
+uint8_t phase_shift = 0;  /* default shift between channel 0 periods */
 
 static uint8_t pmd = 0x01; /* current PWM Mask Data */
 static uint8_t phase_clock;
@@ -138,11 +133,9 @@ void pwm_interrupt_handler(void) INTERRUPT(IRQ_PWM, IRQ_PWM_REG_BANK)
 	PWMF = 0; /* clear interrupt before applying new type */
 
 	if (is_inttype_period()) { /* SW defined 'period' interrupt type */
-		ta_enable();
-		SFRS = 1;
+		sfr_page(1);
 		PWMINTC ^= SET_BIT4; /* toggle between Central and End point interrupts */
-		ta_enable();
-		SFRS = 0;
+		sfr_page(0);
 	}
 
 	/**

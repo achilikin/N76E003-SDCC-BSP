@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#define APP_VERSION "2103.28"
+#define APP_VERSION "2306.10"
 
 /* list of supported commands */
 const __code char cmd_list[] =
@@ -23,7 +23,7 @@ const __code char cmd_list[] =
 	"gpmode [enable|disable]\n"								   /* group mode */
 	"inttype [rise|fall|center|end|period]\n"				   /* PWM interrupt type, 'period' - sw */
 	"opmode [independent|complementary|synchronized|phased]\n" /* operation mode, 'phased' - sw */
-	"phases [$start $end]\n"								   /*get/set channels for phases range */
+	"phases [$start $end]\n"								   /* get/set channels for phases range */
 	"shift [0-255]\n"										   /* phased opmode shift between phased */
 	;
 
