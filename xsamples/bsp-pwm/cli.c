@@ -235,23 +235,20 @@ int8_t commander(__idata char *cmd) {
 			goto EOK;
 		}
 		if (str_is(arg, "fall"))
-			i = 0x00;
+			i = PWM_IRQ_FALL;
 		else if (str_is(arg, "rise"))
-			i = SET_BIT4;
+			i = PWM_IRQ_RISE;
 		else if (str_is(arg, "center"))
-			i = SET_BIT5;
+			i = PWM_IRQ_CENTER;
 		else if (str_is(arg, "end"))
-			i = SET_BIT5 | SET_BIT4;
+			i = PWM_IRQ_END;
 		else if (str_is(arg, "period")) {
 			set_inttype_period();
 			goto EOK;
 		} else
 			return CLI_EARG;
 		clr_inttype_period();
-		sfr_page(1);
-		PWMINTC &= ~(SET_BIT5 | SET_BIT4);
-		PWMINTC |= i;
-		sfr_page(0);
+		pwm_irq_set_type(i);
 		goto EOK;
 	}
 
@@ -268,8 +265,7 @@ int8_t commander(__idata char *cmd) {
 		if (!val)
 			return CLI_EARG;
 		pwm_duty_set(i, val.u16);
-		LOAD = 1;
-		if (PWMRUN)	while(LOAD);
+		pwm_load();
 		goto EOK;
 	}
 

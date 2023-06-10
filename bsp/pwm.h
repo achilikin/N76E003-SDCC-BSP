@@ -42,6 +42,7 @@ void pwm_channel_set_mode(uint8_t channel, enum pwm_mode_t mode);
 #define pwm_start() PWMRUN = 1
 #define pwm_stop()  PWMRUN = 0
 #define pwm_clear() do{CLRPWM=1;while(CLRPWM);}while(0)
+#define pwm_load() do{LOAD=1;while(LOAD);}while(0)
 
 	/**
 	 * writes to PWMPL/PWMPH registers, does not set LOAD.
