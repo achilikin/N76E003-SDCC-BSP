@@ -1985,7 +1985,7 @@ __sfr __at(0xFF) EIPH1;
 #define	PWM_EDGE_TYPE			PWMCON1&=~SET_BIT4
 #define	PWM_CENTER_TYPE			PWMCON1|=SET_BIT4
 /*------------------------ PWM mode define -----------------------------------*/
-#define	PWM_IMDEPENDENT_MODE	PWMCON1&=0x3F
+#define	PWM_INDEPENDENT_MODE	PWMCON1&=0x3F
 #define	PWM_COMPLEMENTARY_MODE	do{PWMCON1|=0x40;PWMCON1&=0x7F;}while(0)
 #define	PWM_SYNCHRONIZED_MODE	do{PWMCON1|=0x80;PWMCON1&=0xBF;}while(0)
 #define PWM_GP_MODE_ENABLE		PWMCON1|=0x20
