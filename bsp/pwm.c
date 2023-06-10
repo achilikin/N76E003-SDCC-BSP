@@ -6,17 +6,6 @@
 */
 #include "pwm.h"
 
-/**
- * writes to PWMPL/PWMPH registers, does not set LOAD.
- * For edge aligned PWM frequency == Fpwm /({PWMPH,PWNPL} + 1),
- * for center aligned PWM frequency == Fpwm /(2 * {PWMPH,PWNPL})
- */
-void pwm_period_set(uint16_t period)
-{
-	PWMPL = LOBYTE(period);
-	PWMPH = HIBYTE(period);
-}
-
 uint16_t pwm_period_get(void)
 {
 	val16_t period;

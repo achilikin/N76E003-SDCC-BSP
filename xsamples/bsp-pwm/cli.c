@@ -220,11 +220,8 @@ int8_t commander(__idata char *cmd) {
 		val.u16 = argtou(arg, &arg);
 		if (!val)
 			return CLI_EARG;
-		PWMPH = val.u8high;
-		PWMPL = val.u8low;
-		LOAD = 1;
-		/* LOAD will be reset by HW only if PWM generator is running */
-		if (PWMRUN)	while(LOAD);
+		pwm_period_set(val.u16);
+		pwm_load();
 		goto EOK;
 	}
 

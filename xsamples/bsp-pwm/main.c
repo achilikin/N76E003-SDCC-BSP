@@ -82,7 +82,7 @@ void main(void)
 	PMD = 0x00;	 /* set all outputs to 0, interrupt will drive them up */
 
 	sti_pwm(); /* enable PWM interrupt */
-	LOAD = 1;
+	pwm_load();
 	pwm_start();
 
 	/** PWM configuration stop ************************************************/
