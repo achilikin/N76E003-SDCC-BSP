@@ -38,7 +38,7 @@ void main(void)
 	sfr_page(1);
 	/* set P0.4 (MARK) high speed skew rate, falling edge faster ~2 nsec */
 	P0SR |= SET_BIT4;
-	PWMINTC = SET_BIT5 | SET_BIT4; /* pwm interrupt at central point */
+	PWMINTC = PWM_IRQ_END; /* pwm interrupt at central point */
 	sfr_page(0);
 	MARK_PIN = 0;
 
@@ -61,7 +61,7 @@ void main(void)
 	/** PWM configuration start ***********************************************/
 	/* configure pins P1.0-P1.2 as PWM0-PWM2 */
 	PIOCON0 |= PIOCON0_PIO02 | PIOCON0_PIO01 | PIOCON0_PIO00;
-	PWM_CLOCK_FSYS; /* select Fsys as PWM clock source */
+	pwm_clock_fsys(); /* select Fsys as PWM clock source */
 	/* set PWM clock to 1 MHz */
 	PWM_CLOCK_DIV_16;
 	pwm_clear();

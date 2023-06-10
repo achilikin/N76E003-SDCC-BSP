@@ -43,12 +43,12 @@ void pwm_channel_set_mode(uint8_t channel, enum pwm_mode_t mode);
 #define pwm_stop()  PWMRUN = 0
 #define pwm_clear() do{CLRPWM=1;while(CLRPWM);}while(0)
 
-/**
- * writes to PWMPL/PWMPH registers, does not set LOAD.
- * For edge aligned PWM frequency == Fpwm /({PWMPH,PWNPL} + 1),
- * for center aligned PWM frequency == Fpwm /(2 * {PWMPH,PWNPL})
- */
-void pwm_period_set(uint16_t period);
+	/**
+	 * writes to PWMPL/PWMPH registers, does not set LOAD.
+	 * For edge aligned PWM frequency == Fpwm /({PWMPH,PWNPL} + 1),
+	 * for center aligned PWM frequency == Fpwm /(2 * {PWMPH,PWNPL})
+	 */
+	void pwm_period_set(uint16_t period);
 
 /** reads from PWMPL/PWMPH registers */
 uint16_t pwm_period_get(void);
@@ -58,6 +58,15 @@ uint16_t pwm_duty_get(uint8_t channel);
 
 /** writes to PWM#L/PWM#H registers, does not set LOAD */
 void pwm_duty_set(uint8_t channel, uint16_t duty);
+
+enum pwm_irq_type_t {
+	PWM_IRQ_FALL = 0,
+	PWM_IRQ_RISE = SET_BIT4,
+	PWM_IRQ_CENTER = SET_BIT5,
+	PWM_IRQ_END = SET_BIT5|SET_BIT4
+};
+
+void pwm_irq_set_type(enum pwm_irq_type_t type);
 
 #ifdef __cplusplus
 }

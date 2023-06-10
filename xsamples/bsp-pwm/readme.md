@@ -9,6 +9,7 @@
 	- [\> pwm](#-pwm)
 	- [\> duty](#-duty)
 	- [\> mask](#-mask)
+	- [\> polarity](#-polarity)
 	- [\> gpmode](#-gpmode)
 	- [\> inttype](#-inttype)
 	- [\> opmode](#-opmode)
@@ -114,6 +115,11 @@ Sets channel's mode mask:
 * pwm
 * low
 * high
+
+## > polarity
+Sets PWM signal polarity for the given channel:
+* positive
+* negative
 
 ## > gpmode
 Enables/disabled group mode.

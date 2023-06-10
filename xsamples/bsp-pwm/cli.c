@@ -20,6 +20,7 @@ const __code char cmd_list[] =
 	"pwm [start|stop]\n"									   /* start/stop PWM generation */
 	"duty $0-5 [$u16]\n"									   /* get/set duty value for a channel */
 	"mask $0-5 [pwm|low|high]\n"							   /* get/set mask for a channel */
+	"polarity $0-5 [positive|negative]\n"					   /* get/set polarity for a channel */
 	"gpmode [enable|disable]\n"								   /* group mode */
 	"inttype [rise|fall|center|end|period]\n"				   /* PWM interrupt type, 'period' - sw */
 	"opmode [independent|complementary|synchronized|phased]\n" /* operation mode, 'phased' - sw */
@@ -277,8 +278,14 @@ int8_t commander(__idata char *cmd) {
 		if (i > 5)
 			return CLI_EARG;
 		if (*arg == '\0') {
-			val.u16 = pwm_duty_get(i);
-			uart_putnl(val.u16);
+			i = pwm_channel_get_mode(i);
+			if (i == PWM_MODE_RUN)
+				uart_putsc("pwm");
+			else if (i == PWM_MODE_LOW)
+				uart_putsc("low");
+			else
+				uart_putsc("high");
+			uart_putc('\n');
 			goto EOK;
 		}
 		if (str_is(arg, "pwm"))
@@ -287,6 +294,27 @@ int8_t commander(__idata char *cmd) {
 			pwm_channel_set_mode(i, PWM_MODE_LOW);
 		else if (str_is(arg, "high"))
 			pwm_channel_set_mode(i, PWM_MODE_HIGH);
+		else
+			return CLI_EARG;
+		goto EOK;
+	}
+
+	if (str_is(cmd, "polarity")) {
+		i = argtou(arg, &arg);
+		if (i > 5)
+			return CLI_EARG;
+		if (*arg == '\0') {
+			if (pwm_channel_get_polarity(i))
+				uart_putsc("negative");
+			else
+				uart_putsc("positive");
+			uart_putc('\n');
+			goto EOK;
+		}
+		if (str_is(arg, "negative"))
+			pwm_channel_set_polarity(i, 1);
+		else if (str_is(arg, "positive"))
+			pwm_channel_set_polarity(i, 0);
 		else
 			return CLI_EARG;
 		goto EOK;

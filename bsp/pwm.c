@@ -169,3 +169,11 @@ enum pwm_mode_t pwm_channel_get_mode(uint8_t channel)
 	}
 	return PWM_MODE_RUN;
 }
+
+void pwm_irq_set_type(enum pwm_irq_type_t type)
+{
+	sfr_page(1);
+	PWMINTC &= ~(SET_BIT5|SET_BIT4);
+	PWMINTC |= type;
+	sfr_page(0);
+}
