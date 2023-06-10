@@ -2,6 +2,7 @@
 # PWM test application for Nuvoton N76E003 SDCC BSP
 
 - [Nuvoton N76E003 development board](#nuvoton-n76e003-development-board)
+- [Overview](#overview)
 - [Supported commands:](#supported-commands)
 	- [\> div](#-div)
 	- [\> period](#-period)
@@ -42,11 +43,15 @@ There are a few different Nuvoton N76E003 development boards available online. T
                 +----------------------+
 
 ```
+# Overview
+This example implements different CLI commands to test and play with PWM configuration of N76E003 chip.
+
+By default it starts in ``phased`` PWM mode which is implemented in SW by interrupts processing. In this mode it is not possible to set duty cycles for different channels, but instead PWM channels work in phased mode. PWM pulse witsh is defiend by PWM ``period`` configuration.
 
 # Supported commands:
 ```
 > help
-VER: 2103.28 (6016 bytes)
+VER: 2306.10 (6416 bytes)
 CMD:
     reset
     div [1|2|4|8|16|32|64|128]
@@ -55,6 +60,7 @@ CMD:
     pwm [start|stop]
     duty $0-5 [$u16]
     mask $0-5 [pwm|low|high]
+	polarity $0-5 [positive|negative]
     gpmode [enable|disable]
     inttype [fall|rise|center|end|period]
     opmode [independent|complementary|synchronized|phased]
@@ -71,11 +77,11 @@ Used code and data:
    OVERLAYS                           2
    STACK            0x0056 0x00FF   170   248   170
    EXTERNAL RAM     0x0001 0x00c7   199   768   569 74.1% free
-   ROM/EPROM/FLASH  0x0000 0x182c  6189 18432 12243 66.4% free
+   ROM/EPROM/FLASH  0x0000 0x190f  6416 18432 12016 65.2% free
 ```
 
 ## > div
-Sets Fsys divider, one of the following: 1, 2, 4, 8, 16, 32, 64, 128
+Example uses Fsys to drive PWM, this commands sets Fsys divider, one of the following: 1, 2, 4, 8, 16, 32, 64, 128
 
 ## > period
 Sets PWM counter period, 16 bits value.
@@ -122,7 +128,7 @@ Sets PWM signal polarity for the given channel:
 * negative
 
 ## > gpmode
-Enables/disabled group mode.
+Enables/disabled group mode for PWM channels.
 
 ## > inttype
 Selects interrupt type:
@@ -130,7 +136,7 @@ Selects interrupt type:
 * fall - falling edge of the channel 0 for ``edge`` PWM type.
 * end - endpoint of the ``center`` period type.
 * center - center point of the ``center`` period type.
-* period - SW defined type, interrupt toggles between ``center`` and ``end`` types. Works for both ``edge`` and ``center`` PWM types.
+* period - SW implemented type, interrupt toggles between ``center`` and ``end`` types. Works for both ``edge`` and ``center`` PWM types.
 
 Rise interrupt:
 
@@ -163,10 +169,10 @@ Select PWM operation mode:
 * independent: all channels configured independent of each other
 * complementary: PWM channels 0/2/4 are independent, but channels 1/3/5 are out-phase of 0/2/4
 * synchronized: PWM channels 0/2/4 are independent, but channels 1/3/5 are in-phase of 0/2/4
-* phased
+* phased: SW will process PWM interrupts and sets outputs, so ``duty`` does not work in this mode
 
 ## > phases
-Selects PWM channels for phased output. This SW defined, interrupt driven mode. In this mode interrupt type will be set to ``period`` and PWM outputs will be masked from low to high in rotation with ``shift`` empty periods inserted. See examples below for the ``shift`` command.
+Selects PWM channels for phased output. This interrupt driven SW mode. In this mode interrupt type will be set to ``period`` and PWM outputs will be masked from low to high in rotation with ``shift`` empty periods inserted. See examples below for the ``shift`` command.
 
 In case if ``shift`` is set to 0, channels will switch with some dead time in between:
 
