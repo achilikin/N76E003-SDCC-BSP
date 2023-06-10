@@ -265,7 +265,9 @@ int8_t commander(__idata char *cmd) {
 		if (!val)
 			return CLI_EARG;
 		pwm_duty_set(i, val.u16);
-		pwm_load();
+		LOAD = 1;
+		if (PWMRUN)
+			while (LOAD);
 		goto EOK;
 	}
 
