@@ -54,7 +54,7 @@ Repository structure:
 └── readme.md: this file
 ```
 
-[bsp-pwm](./xsamples/bsp-pwm/readme.md) provides examples of PWM configurations and PWM interrupt processing.
+[bsp-pwm](./xsamples/bsp-pwm/readme.md) provides examples of PWM configurations and PWM interrupt processing, including ``phased`` PWM implemented with SW interrupt processing.
 
 [bsp-spi](./xsamples/bsp-spi/readme.md) test some of SPI configuration options and use of ``SPSR::TXBUF`` flag.
 
