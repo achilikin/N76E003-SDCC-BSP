@@ -83,3 +83,8 @@ void main(void)
 		}
 	}
 }
+
+void timer(void)
+{
+	return;
+}

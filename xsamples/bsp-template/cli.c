@@ -57,8 +57,3 @@ EARG:
 EOK:
 	return CLI_EOK;
 }
-
-void timer(void)
-{
-	return;
-}
