@@ -9,8 +9,8 @@ uint8_t sfr_read(uint8_t addr)
 {
 	/* each case will move corresponding SFR to dl and return */
 	switch(addr) {
-		case 0x80:
-			__asm__(".db #0x85\n.db #0x80\n.db #0x82\n.db #0x22"); /* 4 bytes same as __asm__("move dl, P0\nret\n") */
+		/* 4 bytes same as __asm__("move dl, P0\nret\n") */
+		case 0x80: __asm__(".db #0x85\n.db #0x80\n.db #0x82\n.db #0x22");
 		case 0x81: __asm__(".db #0x85\n.db #0x81\n.db #0x82\n.db #0x22");
 		case 0x82: __asm__(".db #0x85\n.db #0x82\n.db #0x82\n.db #0x22");
 		case 0x83: __asm__(".db #0x85\n.db #0x83\n.db #0x82\n.db #0x22");

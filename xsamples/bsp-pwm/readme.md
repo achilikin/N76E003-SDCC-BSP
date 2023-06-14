@@ -51,7 +51,7 @@ By default it starts in ``phased`` PWM mode which is implemented in SW by interr
 # Supported commands:
 ```
 > help
-VER: 2306.10 (6416 bytes)
+VER: 2306.12 (6420 bytes)
 CMD:
     reset
     div [1|2|4|8|16|32|64|128]
@@ -77,7 +77,7 @@ Used code and data:
    OVERLAYS                           2
    STACK            0x0056 0x00FF   170   248   170
    EXTERNAL RAM     0x0001 0x00c7   199   768   569 74.1% free
-   ROM/EPROM/FLASH  0x0000 0x190f  6416 18432 12016 65.2% free
+   ROM/EPROM/FLASH  0x0000 0x1913  6420 18432 12012 65.2% free
 ```
 
 ## > div

@@ -46,7 +46,7 @@ void main(void)
 
 	/* generate EVT_TIMER every 250 msec, 4 times per second */
 	tick_init(250);
-	EA = 1; /* enable all interrupts to start tick timer */
+	eni(); /* enable all interrupts to start tick timer */
 
 	/**
 	 * add a delay to stop cursor blinking on programming

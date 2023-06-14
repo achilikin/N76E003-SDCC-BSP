@@ -30,7 +30,7 @@ BSPDIR  = $(BSPROOT)/bsp
 LIBDIR  = $(BSPROOT)/lib
 
 SRCS  = $(BSPDIR)/N76E003.c
-SRCS += $(BSPDIR)/adc.c
+SRCS += $(BSPDIR)/vdd.c
 SRCS += $(BSPDIR)/i2c.c
 SRCS += $(BSPDIR)/tick.c
 SRCS += $(BSPDIR)/uart.c

@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#define APP_VERSION "2306.10"
+#define APP_VERSION "2306.12"
 
 /* list of supported commands */
 const __code char cmd_list[] =
@@ -218,7 +218,7 @@ int8_t commander(__idata char *cmd) {
 			goto EOK;
 		}
 		val.u16 = argtou(arg, &arg);
-		if (!val)
+		if (!val.u16)
 			return CLI_EARG;
 		pwm_period_set(val.u16);
 		pwm_load();
@@ -259,12 +259,10 @@ int8_t commander(__idata char *cmd) {
 			goto EOK;
 		}
 		val.u16 = argtou(arg, &arg);
-		if (!val)
+		if (!val.u16)
 			return CLI_EARG;
 		pwm_duty_set(i, val.u16);
-		LOAD = 1;
-		if (PWMRUN)
-			while (LOAD);
+		pwm_load();
 		goto EOK;
 	}
 
