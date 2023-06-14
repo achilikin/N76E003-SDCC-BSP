@@ -1,0 +1,19 @@
+../../bsp/N76E003.rel: ../../bsp/N76E003.c ../../bsp/N76E003.h
+
+../../bsp/adc.rel: ../../bsp/N76E003.h ../../bsp/adc.c ../../bsp/adc.h
+
+../../bsp/pwm.rel: ../../bsp/N76E003.h ../../bsp/pwm.c ../../bsp/pwm.h
+
+../../bsp/tick.rel: ../../bsp/N76E003.h ../../bsp/tick.c ../../bsp/tick.h ../../bsp/irq.h
+
+../../bsp/uart.rel: ../../bsp/N76E003.h ../../bsp/uart.c ../../bsp/uart.h ../../bsp/irq.h ../../bsp/event.h
+
+../../bsp/event.rel: ../../bsp/N76E003.h ../../bsp/event.c ../../bsp/event.h ../../bsp/irq.h ../../bsp/event.h
+
+../../bsp/terminal.rel: ../../bsp/terminal.c ../../bsp/terminal.h
+
+cli.rel: main.h cli.c ../../bsp/terminal.h ../../bsp/uart.h
+
+main.rel: main.c main.h cli.c \
+	../../bsp/N76E003.h ../../bsp/irq.h ../../bsp/tick.h ../../bsp/uart.h \
+	../../bsp/event.h ../../bsp/terminal.h
