@@ -18,7 +18,7 @@ Repository structure:
 │       └── flash device: flash the image from the current folder
 ├── bsp : common system files
 │   ├── N76E003.c/h: main definitions for N76E003
-│   ├── adc.c/h: ADC bandgap for calculating Vdd value
+│   ├── adc.c/h: ADC APIs
 │   ├── event.c/h: simple ring buffer for generating events from ISRs
 │   ├── i2c.c/h: I2C bus APIs
 │   ├── iap.c/h: In Application Programming routines to read/write MCU flash memory
@@ -29,7 +29,8 @@ Repository structure:
 │   ├── pwm.c/h: PWM handling APIs
 │   ├── terminal.c/h: serial communication APIs enough to support simple CLI with one line history
 │   ├── tick.c/h: wake-up timer (WKT) interrupt to provide milliseconds tick events
-│   └── uart.c/h: UART 0/1 APIs.
+│   ├── uart.c/h: UART 0/1 APIs.
+│   └── vdd.c: ADC bandgap for calculating Vdd value
 ├── lib : library of common drivers
 │   ├── bv4618.c/h: BV4618 LCD controller driver
 │   ├── dht.c/h: DHT/AM2302 relative humidity/temperature driver
