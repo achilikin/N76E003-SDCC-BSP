@@ -33,23 +33,23 @@ There are a few different Nuvoton N76E003 development boards available online. T
         PWM0 ---|13 P1.2        P1.5 10|---
         PWM1 ---|14 P1.1        P1.6 8 |--- DAT [ICP]
         PWM2 ---|15 P1.0        P1.7 7 |---
-             ---|16 P0.0        P3.0 5 |--- ADC_AIN1
+             ---|16 P0.0        P3.0 5 |---
              ---|17 P0.1        P2.0 2 |--- RST [ICP]
    [ICP] CLK ---|18 P0.2        P0.7 3 |--- UART0 RX
         SYNC ---|19 P0.3        P0.6 2 |--- UART0 TX
-        MARK ---|20 P0.4        P0.5 1 |---
+        MARK ---|20 P0.4        P0.5 1 |--- ADC_CHANNEL
                 +----------------------+
 
 ```
 5 pins are used for oscilloscope only - ``PWM0``, ``PWM1``, ``PWM2``, ``SYNC``, ``MARK``, can be re-used as generic IO if needed.
 
-ADC_AIN1 reads output of 10K rotary potentiometer connected between VDD and GND. ADC value then used to control OUT1 and OUT2 duty in ``inphase`` and ``antiphase`` modes.
+ADC_CHANNEL (AIN4) reads output of 10K rotary potentiometer connected between VDD and GND. ADC value then used to control OUT1 and OUT2 duty in ``inphase`` and ``antiphase`` modes.
 
 
 # Supported commands:
 ```
 > help
-VER: 2306.14 (4427 bytes)
+VER: 2307.04 (4429 bytes)
 CMD:
     reset
     adc [on|off]
@@ -66,7 +66,7 @@ Used code and data:
    OVERLAYS                           2
    STACK            0x0054 0x00FF   172   248   172
    EXTERNAL RAM     0x0001 0x00c7   199   768   569 74.1% free
-   ROM/EPROM/FLASH  0x0000 0x114a  4427 18432 14005 76.0% free
+   ROM/EPROM/FLASH  0x0000 0x114c  4429 18432 14003 76.0% free
 ```
 
 ## > mode

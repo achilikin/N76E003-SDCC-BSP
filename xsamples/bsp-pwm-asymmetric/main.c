@@ -19,16 +19,16 @@ uint8_t pwm_signal_mode = PWM_SIGNAL_INPHASE;
  *                  D T K T D    V 3 0 0 D
  *                  | | | | |    | | | | |
  *                 +----------------------+
- *   DRV8871 N1 ---|11 P1.4         VDD 9 |--- VDD
- *   DRV8871 N2 ---|12 P1.3         GND 7 |--- GND
+ *         OUT1 ---|11 P1.4         VDD 9 |--- VDD
+ *         OUT2 ---|12 P1.3         GND 7 |--- GND
  *         PWM0 ---|13 P1.2        P1.5 10|---
  *         PWM1 ---|14 P1.1        P1.6 8 |--- DAT [ICP]
  *         PWM2 ---|15 P1.0        P1.7 7 |---
- *              ---|16 P0.0        P3.0 5 |--- ADC_AIN1
+ *              ---|16 P0.0        P3.0 5 |---
  *              ---|17 P0.1        P2.0 2 |--- RST [ICP]
  *    [ICP] CLK ---|18 P0.2        P0.7 3 |--- UART0 RX
  *         SYNC ---|19 P0.3        P0.6 2 |--- UART0 TX
- *         MARK ---|20 P0.4        P0.5 1 |---
+ *         MARK ---|20 P0.4        P0.5 1 |--- ADC_CHANNEL
  *                 +----------------------+
  */
 
@@ -86,8 +86,8 @@ void main(void)
 	PWM_EDGE_TYPE; /* set pwm generator to edge type */
 	PWM_INDEPENDENT_MODE;
 
-	PIN_OUT0 = 0;
 	PIN_OUT1 = 0;
+	PIN_OUT2 = 0;
 
 	sti_pwm(); /* enable PWM interrupt */
 	pwm_load(); /* load PWM values */
@@ -95,10 +95,10 @@ void main(void)
 
 	/* initialize ADC */
 	adc_mode_set();
-	P30_Input_Mode; /* our ADC_IN1 */
-	AINDIDS |= SET_BIT1;
+	P05_Input_Mode; /* our ADC_AIN connected to AIN4 */
+	AINDIDS |= 1 << ADC_CHANNEL;
 	adc_clear();
-	adc_select_channel(ADC_AIN1);
+	adc_select_channel(ADC_CHANNEL);
 	adc_start();
 
 	/** PWM configuration stop ************************************************/
@@ -166,46 +166,47 @@ void pwm_interrupt_handler(void) INTERRUPT(IRQ_PWM, IRQ_PWM_REG_BANK)
 	switch (irq_handler_type) {
 	case IRQ_TYPE_START:
 		SYNC_PULSE; /* sync pulse for oscilloscope */
-		PIN_OUT0 = 0;
+		PIN_OUT1 = 0;
+		PIN_OUT2 = 0;
 		/* calculate the next IRQ type depending on CH0 pulse width */
 		/* if pulse is too short or too wide - next IRQ type is the center point */
 		if ((PWM0L < 2) || (PWM0L > (PWM_PERIOD / 2 - 1))) {
-			PIN_OUT0 = (PWM0L > 1) ? 1 : 0;
+			PIN_OUT1 = (PWM0L > 1) ? 1 : 0;
 			irq_handler_type = IRQ_TYPE_CENTER;
 			irq = PWM_IRQ_FALL | PWM_IRQ_PWM2;
 			break;
 		}
-		PIN_OUT0 = 1;
+		PIN_OUT1 = 1;
 		/* next IRQ type - CH0 falling edge */
 		irq_handler_type = IRQ_TYPE_CH0_FALL;
 		irq = PWM_IRQ_FALL | PWM_IRQ_PWM0;
 		break;
 	case IRQ_TYPE_CH0_FALL:
-		PIN_OUT0 = 0;
+		PIN_OUT1 = 0;
 		/* next IRQ type - center point */
 		irq_handler_type = IRQ_TYPE_CENTER;
 		irq = PWM_IRQ_FALL | PWM_IRQ_PWM2;
 		break;
 	case IRQ_TYPE_CENTER:
-		PIN_OUT0 = 0; /* just in case */
+		PIN_OUT1 = 0; /* just in case */
 		/* if pulse is too short or too wide - next IRQ type is the center point */
 		if ((PWM1L < (PWM_PERIOD / 2 + 2)) || (PWM1L > (PWM_PERIOD - 1))) {
 			if (PWM1L < (PWM_PERIOD / 2 + 2))
-				PIN_OUT1 = 0;
+				PIN_OUT2 = 0;
 			else
-				PIN_OUT1 = 1;
+				PIN_OUT2 = 1;
 			/* next IRQ type - start point */
 			irq_handler_type = IRQ_TYPE_START;
 			irq = PWM_IRQ_RISE | PWM_IRQ_PWM2;
 			break;
 		}
-		PIN_OUT1 = 1;
+		PIN_OUT2 = 1;
 		/* next IRQ type - CH1 falling edge */
 		irq_handler_type = IRQ_TYPE_CH1_FALL;
 		irq = PWM_IRQ_FALL | PWM_IRQ_PWM1;
 		break;
 	case IRQ_TYPE_CH1_FALL:
-		PIN_OUT1 = 0;
+		PIN_OUT2 = 0;
 		/* next IRQ type - start point */
 		irq_handler_type = IRQ_TYPE_START;
 		irq = PWM_IRQ_RISE | PWM_IRQ_PWM2;

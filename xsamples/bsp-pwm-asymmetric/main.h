@@ -32,8 +32,9 @@
 #define PWM_PERIOD 204
 #define PWM_DUTY_MAX (PWM_PERIOD/2)
 
-#define PIN_OUT0 P14
-#define PIN_OUT1 P13
+#define PIN_OUT1 P14
+#define PIN_OUT2 P13
+#define ADC_CHANNEL ADC_AIN4
 
 extern uint8_t adc_duty;
 
