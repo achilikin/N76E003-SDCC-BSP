@@ -49,7 +49,7 @@ ADC_CHANNEL (AIN4) reads output of 10K rotary potentiometer connected between VD
 # Supported commands:
 ```
 > help
-VER: 2307.04 (4429 bytes)
+VER: 2307.05 (4425 bytes)
 CMD:
     reset
     adc [on|off]
@@ -66,7 +66,7 @@ Used code and data:
    OVERLAYS                           2
    STACK            0x0054 0x00FF   172   248   172
    EXTERNAL RAM     0x0001 0x00c7   199   768   569 74.1% free
-   ROM/EPROM/FLASH  0x0000 0x114c  4429 18432 14003 76.0% free
+   ROM/EPROM/FLASH  0x0000 0x1148  4425 18432 14007 76.0% free
 ```
 
 ## > mode

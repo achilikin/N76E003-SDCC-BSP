@@ -157,21 +157,23 @@ enum pwm_irq_handler_type_t {
 
 static uint8_t irq_handler_type = IRQ_TYPE_START;
 
+#define MAGIC_NUMBER 3
+
 /** quite complex and cumbersome PWM IRQ processing, to be optimized... */
 void pwm_interrupt_handler(void) INTERRUPT(IRQ_PWM, IRQ_PWM_REG_BANK)
 {
 	MARK_ON;
-	uint8_t irq = PWMINTC;
+	uint8_t irq = 0;
 
 	switch (irq_handler_type) {
 	case IRQ_TYPE_START:
 		SYNC_PULSE; /* sync pulse for oscilloscope */
-		PIN_OUT1 = 0;
 		PIN_OUT2 = 0;
 		/* calculate the next IRQ type depending on CH0 pulse width */
 		/* if pulse is too short or too wide - next IRQ type is the center point */
-		if ((PWM0L < 2) || (PWM0L > (PWM_PERIOD / 2 - 1))) {
-			PIN_OUT1 = (PWM0L > 1) ? 1 : 0;
+		/* magic number below is needed to stabilize pulse width and avoid IRQ stacking */
+		if ((PWM0L < MAGIC_NUMBER) || (PWM0L > (PWM_PERIOD / 2 - 1))) {
+			PIN_OUT1 = (PWM0L >= MAGIC_NUMBER) ? 1 : 0;
 			irq_handler_type = IRQ_TYPE_CENTER;
 			irq = PWM_IRQ_FALL | PWM_IRQ_PWM2;
 			break;
@@ -189,11 +191,10 @@ void pwm_interrupt_handler(void) INTERRUPT(IRQ_PWM, IRQ_PWM_REG_BANK)
 		break;
 	case IRQ_TYPE_CENTER:
 		PIN_OUT1 = 0; /* just in case */
+		/* PIN_OUT2 already set to 0 at IRQ_TYPE_START */
 		/* if pulse is too short or too wide - next IRQ type is the center point */
-		if ((PWM1L < (PWM_PERIOD / 2 + 2)) || (PWM1L > (PWM_PERIOD - 1))) {
-			if (PWM1L < (PWM_PERIOD / 2 + 2))
-				PIN_OUT2 = 0;
-			else
+		if ((PWM1L < (PWM_PERIOD / 2 + MAGIC_NUMBER)) || (PWM1L > (PWM_PERIOD - MAGIC_NUMBER))) {
+			if (PWM1L >= (PWM_PERIOD / 2 + MAGIC_NUMBER))
 				PIN_OUT2 = 1;
 			/* next IRQ type - start point */
 			irq_handler_type = IRQ_TYPE_START;

@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#define APP_VERSION "2307.04"
+#define APP_VERSION "2307.05"
 
 /* list of supported commands */
 const __code char cmd_list[] =
