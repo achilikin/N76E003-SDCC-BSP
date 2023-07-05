@@ -75,6 +75,18 @@ Select operational mode for the signals:
 * inphase: duty for signal 0 applied to both signals (default on reset)
 * antiphase: duty for signal 0 is in anti-phase for signal 1, calling ``duty 0 0`` will set OUT0 to 0% and OUT1 to 100%.
 
+For example, ``inphase`` mode for duty set to 10 and 90:
+
+<img src="./img/inphase-10.png"/>
+
+<img src="./img/inphase-90.png"/>
+
+And ``antiphase`` mode for duty set to 10 and 90:
+
+<img src="./img/antiphase-10.png"/>
+
+<img src="./img/antiphase-90.png"/>
+
 ## > adc
 If turned on (default on reset), then ADC value is used to set signals' duty in ``inphase`` and ``antiphase`` modes
 
