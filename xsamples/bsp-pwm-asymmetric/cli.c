@@ -29,7 +29,9 @@ int8_t commander(__idata char* cmd)
 	__idata char *arg = get_arg(cmd);
 
 	if (str_is(cmd, "help")) {
-		uart_putsc("VER: ");
+		uart_putsc("BSP: ");
+		uart_putsc(BSP_VERSION);
+		uart_putsc("\nAPP: ");
 		uart_putsc(APP_VERSION);
 		uart_putsc(" (");
 		uart_putn(sdcc_get_code_size());
