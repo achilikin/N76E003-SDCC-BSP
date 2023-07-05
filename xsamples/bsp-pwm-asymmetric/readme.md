@@ -28,8 +28,8 @@ There are a few different Nuvoton N76E003 development boards available online. T
                 D T K T D  V 3 0 0 D
                 | | | | |  | | | | |
                 +----------------------+
-        OUT0 ---|11 P1.4         VDD 9 |--- VDD
-        OUT1 ---|12 P1.3         GND 7 |--- GND
+        OUT1 ---|11 P1.4         VDD 9 |--- VDD
+        OUT2 ---|12 P1.3         GND 7 |--- GND
         PWM0 ---|13 P1.2        P1.5 10|---
         PWM1 ---|14 P1.1        P1.6 8 |--- DAT [ICP]
         PWM2 ---|15 P1.0        P1.7 7 |---
