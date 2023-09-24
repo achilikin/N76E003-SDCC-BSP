@@ -69,18 +69,20 @@ void uart_init(enum UART_BR baudrate, bool rx_enable)
 
 #if USE_UART == 0
 	SCON = 0x40;  	/* UART0 Mode 1 */
+	/* Set SMOD to divide Timer 3 overflow rate by 16 - same as UART1 default */
 	set_SMOD;		/* UART0 Double Rate Enable */
-	set_BRCK;		/* Timer 3 as UART0 baud rate clock source */
+	/* UART0 can use Timer 1 or Timer 3 as baud rate clock source */
+	/* Select Timer 3 to be consistent with UART1 which can use only T3 */
+	set_BRCK;
 
 	P06_Quasi_Mode;	/* UART0 TX pin */
-
 	if (rx_enable) {
 		P07_Quasi_Mode;	/* UART0 RX pin */
 		set_REN;		/* Receive enabled */
 	}
 #elif USE_UART == 1
 	SCON_1 = 0x40;		/* UART1 Mode 1 */
-
+	/* UART1 can use only Timer 3 devided by 16 as baud rate clock source in mode 1*/
 	P16_Quasi_Mode;		/* UART1 TX pin */
 	if (rx_enable) {
 		P02_Quasi_Mode;	/* UART1 RX pin */
