@@ -59,7 +59,7 @@ void main(void)
 	event_flush(); /* clear any events */
 	tick = 0;
 	/** PWM configuration start ***********************************************/
-	/* configure pins P1.0-P1.2 as PWM0-PWM2 */
+	/* configure pins P1.2-P1.0 as PWM0-PWM2 */
 	PIOCON0 |= PIOCON0_PIO02 | PIOCON0_PIO01 | PIOCON0_PIO00;
 	pwm_clock_fsys(); /* select Fsys as PWM clock source */
 	/* set PWM clock to 1 MHz */

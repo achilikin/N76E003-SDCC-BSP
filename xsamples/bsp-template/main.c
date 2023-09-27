@@ -37,8 +37,8 @@ void main(void)
 	MARK_PIN = 0;
 
 	sfr_page(1);
-	/* set P1.0 (MARK) high speed skew rate, falling edge faster ~2 nsec */
-	P1SR |= SET_BIT0;
+	/* set P0.4 (MARK) high speed skew rate, falling edge faster ~2 nsec */
+	P0SR |= SET_BIT4;
 	sfr_page(0);
 
 	uart_init(UART_BR_38400, true);
