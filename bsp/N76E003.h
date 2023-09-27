@@ -353,6 +353,12 @@ __sfr __at(0xDE) PIOCON0;
 	#define PIOCON0_PIO02 SET_BIT2
 	#define PIOCON0_PIO01 SET_BIT1
 	#define PIOCON0_PIO00 SET_BIT0
+	#define PIOCON0_P03_PWM5 SET_BIT5 /** 1 = P0.3/PWM5 pin functions as PWM5 output */
+	#define PIOCON0_PO4_PWM4 SET_BIT4 /** 1 = P0.1/PWM4 pin functions as PWM4 output */
+	#define PIOCON0_P00_PWM3 SET_BIT3 /** 1 = P0.0/PWM3 pin functions as PWM3 output */
+	#define PIOCON0_P10_PWM2 SET_BIT2 /** 1 = P1.0/PWM2 pin functions as PWM2 output */
+	#define PIOCON0_P11_PWM1 SET_BIT1 /** 1 = P1.1/PWM1 pin functions as PWM1 output */
+	#define PIOCON0_P12_PWM0 SET_BIT0 /** 1 = P1.2/PWM0 pin functions as PWM0 output */
 __sfr __at(0xDF) PWMCON1;
 	#define PWMCON1_PWMMOD (SET_BIT7 | SET_BIT6)
 	#define PWMCON1_GP 		SET_BIT5
