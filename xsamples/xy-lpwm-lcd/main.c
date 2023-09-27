@@ -102,7 +102,7 @@ void main(void)
 
 	/* measure and display Vdd, use evt as a local variable */
 	lcd_set_sign(LCD_SIG_IN, true);
-	evt.evt = get_vdd(ADC_GET_VDD);
+	evt.evt = adc_get_vdd(ADC_GET_VDD);
 	lcd_printn(evt.evt, 0, 4);
 	lcd_printn(cfg.duty, 4, 4);
 	lcd_set_sign(LCD_SIG_DOT0, true);

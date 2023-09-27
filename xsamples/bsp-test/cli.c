@@ -114,12 +114,12 @@ int8_t test_cli(__idata char *cmd)
 		uart_putc('\n');
 
 		uart_putsc("BGP: "); /* ADC bandgap */
-		uart_puthw(get_vdd(ADC_GET_RAW_BGAP));
+		uart_puthw(adc_get_vdd(ADC_GET_RAW_BGAP));
 		uart_putc(' ');
-		uart_putn(get_vdd(ADC_GET_BGAP));
+		uart_putn(adc_get_vdd(ADC_GET_BGAP));
 		uart_putsc(" mV\n");
 		uart_putsc("Vdd: ");
-		uart_putn(get_vdd(ADC_GET_VDD));
+		uart_putn(adc_get_vdd(ADC_GET_VDD));
 		uart_putsc(" mV\nUID: ");
 		for (i = 0; i < IAP_UID_SIZE; i++) {
 			if (i)
@@ -730,7 +730,7 @@ void timer(void)
 		}
 		bv4618_line(2);
 		bv4618_putsc("Vdd: ");
-		bv4618_putn(get_vdd(ADC_GET_VDD));
+		bv4618_putn(adc_get_vdd(ADC_GET_VDD));
 		bv4618_putsc(" mV");
 	}
 #endif
@@ -766,7 +766,7 @@ void timer(void)
 		}
 		pcf_line(2);
 		pcf_putsc("Vdd: ");
-		pcf_putn(get_vdd(ADC_GET_VDD));
+		pcf_putn(adc_get_vdd(ADC_GET_VDD));
 		pcf_putsc(" mV");
 	}
 #endif

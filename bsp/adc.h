@@ -9,7 +9,7 @@ extern "C" {
 
 #define ADC_GET_RAW_BGAP 0
 #define ADC_GET_BGAP	 1
-#define ADC_GET_VDD		 2
+#define ADC_GET_VDD		 2 /* return Vdd in mV  */
 
 enum adc_channel_t {
 	ADC_AIN0, /* P0.7, pin 6 */
@@ -35,7 +35,7 @@ enum adc_channel_t {
 uint16_t adc_read(void);
 
 /* vdd.c, requires iap_read.c */
-uint16_t get_vdd(uint8_t mode);
+uint16_t adc_get_vdd(uint8_t mode);
 
 #ifdef __cplusplus
 }

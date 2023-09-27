@@ -50,14 +50,14 @@ int8_t lcd_cli(__idata char *cmd)
 		uart_putn(sdcc_get_code_size());
 		uart_putsc(" bytes)\n");
 		uart_putsc("BGP: ");
-		uint16_t bgap = get_vdd(ADC_GET_RAW_BGAP);
+		uint16_t bgap = adc_get_vdd(ADC_GET_RAW_BGAP);
 		uart_puthw(bgap);
 		uart_putc(' ');
-		bgap = get_vdd(ADC_GET_BGAP);
+		bgap = adc_get_vdd(ADC_GET_BGAP);
 		uart_putn(bgap);
 		uart_putsc("mV\nVDD: ");
 
-		bgap = get_vdd(ADC_GET_VDD);
+		bgap = adc_get_vdd(ADC_GET_VDD);
 		uart_putn(bgap);
 		uart_putsc("mV\nUID:");
 
