@@ -73,7 +73,7 @@ void uart_putrn(uint16_t val);
 /** print uint8_t in hex format */
 void uart_puth(uint8_t val);
 
-/** print uint16_t in hex dormat */
+/** print uint16_t in hex format */
 #define uart_puthw(val) do{uart_puth(HIBYTE(val));uart_puth(LOBYTE(val));}while(0)
 void uart_putbit(uint8_t val);
 void uart_puts(__idata const char *str);
