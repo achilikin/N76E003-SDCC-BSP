@@ -3,7 +3,7 @@
 Alternative firmware for popular single channel PWM generator XY-LPWM and its clones.
 
 There are at least three different versions of XY-LPWM:
-* XY-LPWM
+* XY-LPWM (JZ-LPWM)
 * VHM-800
 * Un-named board
 
