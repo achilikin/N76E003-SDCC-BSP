@@ -110,13 +110,13 @@ Some tricks to save power in power-down mode:
 
 Combining all the above will help to achieve ~6 uA:
 
-<img src="./img/power-down.png" width="400" />
+<img src="./img/power-down.png" width="600" />
 
 with ~300uA every minute to check Vdd
 
 With LED and timer not attached in Power ON mode this board will consume ~ 6mA:
 
-<img src="./img/power-on.png" width="400" />
+<img src="./img/power-on.png" width="600" />
 
 Current measurements are for the bare board, no LED or timer are attached.
 
