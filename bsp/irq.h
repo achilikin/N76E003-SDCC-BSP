@@ -30,6 +30,8 @@ enum IRQ_NUM {
 
 /* all interrupts generating events will use the same priority and the same bank */
 #define IRQ_REG_BANK		1
+#define IRQ_EXT0_REG_BANK	IRQ_REG_BANK
+#define IRQ_EXT1_REG_BANK	IRQ_REG_BANK
 #define IRQ_TIM0_REG_BANK	IRQ_REG_BANK
 #define IRQ_UART_REG_BANK	IRQ_REG_BANK
 #define IRQ_I2C_REG_BANK	IRQ_REG_BANK
