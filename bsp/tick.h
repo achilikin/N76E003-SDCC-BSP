@@ -1,7 +1,7 @@
 /*
   The MIT License (MIT)
 
-  Use N76E003 WKT interrupt to provide milliseconds counters
+  Use N76E003 Wake-up Timer (WKT) interrupt to provide milliseconds counters
 
   Configuration defines (can be changed in Makefile):
     #define TICK_DEBUG P12 // define pit to toggle on WKT interrupt
@@ -22,9 +22,9 @@ typedef volatile union {
 	uint32_t millis;
 	uint16_t milli16;
 	uint8_t  milli8;
-} tick_t;
+} wkt_tick_t;
 
-extern tick_t ticks;
+extern wkt_tick_t wkt_ticks;
 
 /** defines which IRQ to use - WKT or WDT, only WKT supported by now */
 #define IRQ_TICK			IRQ_WKT
@@ -33,33 +33,41 @@ extern tick_t ticks;
 void tick_interrupt_handler(void) INTERRUPT(IRQ_TICK,IRQ_TICK_REG_BANK);
 
 /**
- * initialize 'tick' timer interrupts for 1 msec timer
- * @param evt_timer interval in msec to generate EVT_TICK
+ * @brief initialize 'tick' timer interrupts for 1 msec timer
+ *
+ * @param evt_timer interval in msec to generate EVT_TICK. 0 to disable event.
  */
 void tick_init(uint8_t evt_timer);
 
 /**
- * set tick interval:
- * @param evt_timer new interval for tick event
+ * @brief set tick interval:
+ *
+ * @param evt_timer new interval for tick event. 0 to disable event.
  * @return previous interval value
  */
 uint8_t tick_interval(uint8_t evt_timer);
 
 enum POWER_MODE {
-	MODE_POWER_UP = 0,
-	MODE_IDLE = PCON_IDL,
-	MODE_POWER_DOWN = PCON_PD
+	POWER_MODE_UP = 0,
+	POWER_MODE_IDLE = PCON_IDL,
+	POWER_MODE_DOWN = PCON_PD
 };
 
-void wait(uint16_t msec, enum POWER_MODE mode);
+/**
+ * @brief wait for number of timer clocks
+ *
+ * @param ticks number of WKT ticks to wait
+ * @param mode waiting mode, POWER_MODE_UP, POWER_MODE_IDLE, POWER_MODE_DOWN
+ */
+void wait(uint16_t ticks, enum POWER_MODE mode);
 
-inline uint8_t millis8(void) { return ticks.milli8; }
+inline uint8_t millis8(void) { return wkt_ticks.milli8; }
 uint16_t millis(void);
 uint32_t millis32(void);
 
-#define delay(msec) wait(msec, MODE_POWER_UP) /** delay in milliseconds */
-#define idle(msec) wait(msec,MODE_IDLE)
-#define sleep(msec) wait(msec,MODE_POWER_DOWN)
+#define delay(msec) wait(msec,POWER_MODE_UP) /** delay in milliseconds */
+#define idle(msec) wait(msec,POWER_MODE_IDLE)
+#define sleep(msec) wait(msec,POWER_MODE_DOWN)
 
 /**
  * delay in microseconds, measured with oscilloscope:
@@ -77,7 +85,7 @@ void delay_mks(uint16_t mks);
 
 /* elapsed time */
 inline uint8_t elapsed(uint8_t ts) {
-	return (uint8_t)(ticks.milli8 - (uint8_t)ts);
+	return (uint8_t)(wkt_ticks.milli8 - (uint8_t)ts);
 }
 
 #ifdef __cplusplus
