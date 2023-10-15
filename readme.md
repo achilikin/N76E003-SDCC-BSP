@@ -208,6 +208,7 @@ Pin P1.5 has on-board ``blink`` LED connected.
 <img src="./img/xy-lpwm-schematics.svg"/>
 
 7133-1 voltage regulator (24V to 3.3V):
+
 <img src="./img/jz-lpwm.jpg" width="400px"/>
 
 M5333B voltage regulator (35V to 3.3V):
