@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-#define BSP_VERSION "2306.14"
+#define BSP_VERSION "2310.15"
 
 /*------------------------------------------------------------------------------
   Some defines to make VS-Code IntelliSense happy
