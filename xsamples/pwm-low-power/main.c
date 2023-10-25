@@ -11,6 +11,7 @@
 #include "main.h"
 
 uint8_t state = STATE_LED_OFF;
+uint8_t power = 0xFF; /* 0 - 100: manual mode, > 100: auto mode */
 
 #define FSYS_16MHZ 0
 #define FSYS_10KHZ 1
@@ -52,6 +53,7 @@ void main(void)
 	event_t evt;
 
 	Set_All_GPIO_Quasi_Mode;
+	P12 = 0;
 	/* connected to SLEEP ON/OFF timer. 1 - sleep, 0 - ON. Used to drive EXT0 */
 	P30_Input_Mode;
 	sfr_page(1);
@@ -84,30 +86,30 @@ void main(void)
 	/* cli_exec("help\n") called adc_get_vdd() and initialized internal iap_bgap value */
 	/* so we do not need iap anymore and better disable it to save extra ~1.2 mA in power down mode */
 	iap_disable();
+	while (!uart_tx_empty()); /* flush UART in case if we are going to power down mode*/
+	event_flush(); /* clear any events */
 
 	/** PWM configuration start ***********************************************/
-	/* configure pins P1.2 as PWM0 */
-	PIOCON0 |= PIOCON0_P12_PWM0;
 	pwm_clock_fsys(); /* select Fsys as PWM clock source */
 	PWM_CLOCK_DIV_16; /* 10kHz with PWM_PERIOD = 100 */
 	pwm_clear();
 
 	/* for edge aligned PWM frequency == Fpwm /({PWMPH,PWNPL} + 1) */
 	pwm_period_set(PWM_PERIOD - 1);
-	pwm_duty_set(0, 0);
+	pwm_duty_set(LED_PWM_CHANNEL, 0);
 
 	PWM_EDGE_TYPE; /* set pwm generator to edge type */
 	PWM_INDEPENDENT_MODE;
+	/* configure pins P1.2 as PWM0 */
+	PIOCON0 |= PIOCON0_P12_PWM0;
 	pwm_load(); /* load PWM values */
 	pwm_start(); /* and start PWM */
-
-	while (!uart_tx_empty()); /* flush UART in case if we are going to power down mode*/
-	event_flush(); /* clear any events */
 
 	if (get_vdd() < 300) {
 		set_state(STATE_BATTERY_LOW);
 		turn_led_on(50);
 		turn_led_off();
+		pwm_stop(); /* stop PWM to avoid flickering while measuring Vdd */
 		fsys_set_clock(FSYS_10KHZ); /* run al low speed */
 		wkt_tick_set_mode(WKT_TICK_MINUTE); /* WKT tick interval ~1 minute */
 	} else {
@@ -115,6 +117,7 @@ void main(void)
 			set_state(STATE_LED_ON);
 		else { /* can happen only in debug mode when SLEEP_TIMER_PIN pin controlled mannually */
 			set_state(STATE_LED_OFF);
+			pwm_stop();
 			fsys_set_clock(FSYS_10KHZ);
 			wkt_tick_set_mode(WKT_TICK_MINUTE);
 		}
@@ -131,6 +134,7 @@ void main(void)
 		case STATE_LED_ON:
 			if (SLEEP_TIMER_PIN) {
 				turn_led_off();
+				pwm_stop();
 				set_state(STATE_LED_OFF);
 				fsys_set_clock(FSYS_10KHZ);
 				wkt_tick_set_mode(WKT_TICK_MINUTE);
@@ -139,12 +143,16 @@ void main(void)
 			vdd = get_vdd();
 			if (vdd < 300) {
 				turn_led_off();
+				pwm_stop();
 				set_state(STATE_BATTERY_LOW);
 				fsys_set_clock(FSYS_10KHZ);
 				wkt_tick_set_mode(WKT_TICK_MINUTE);
 				break;
 			}
-			pwm_duty_set(LED_PWM_CHANNEL, get_pwm_power(vdd));
+			if (power <= 100)
+				pwm_duty_set(LED_PWM_CHANNEL, power);
+			else
+				pwm_duty_set(LED_PWM_CHANNEL, get_pwm_power(vdd));
 			pwm_load();
 			break;
 		case STATE_LED_OFF:
@@ -158,6 +166,7 @@ void main(void)
 				fsys_set_clock(FSYS_16MHZ); /* run at high speed */
 				set_state(STATE_LED_ON);
 				wkt_tick_set_mode(WKT_TICK_MSEC); /* WKT tick interval to normal 1msec */
+				pwm_start();
 				turn_led_on(get_pwm_power(vdd));
 			}
 			break;
@@ -170,6 +179,7 @@ void main(void)
 					set_state(STATE_LED_ON);
 					fsys_set_clock(FSYS_16MHZ);
 					wkt_tick_set_mode(WKT_TICK_MSEC);
+					pwm_start();
 					turn_led_on(get_pwm_power(vdd));
 				}
 			}
@@ -242,6 +252,65 @@ uint16_t get_vdd(void)
 	return adc_get_vdd(ADC_GET_VDD) / 10;
 }
 
+#if LED_POWER_USE_MAP
+
+static uint8_t map(int16_t val, int16_t v_min, int16_t v_max, int16_t pwm_min, int16_t pwm_max)
+{
+	return (val - v_min) * (pwm_max - pwm_min) / (v_max - v_min) + pwm_min;
+}
+
+/*
+ ~30mA PWM map
+	Vdd		PWM	mA
+	300.0	100 20
+	320.0	100	30
+	340.0	65	30
+	360.0	50	30
+	380.0	43	30
+	400.0	38	30
+	420.0	35	30
+
+~ 40mA PWM map
+	Vdd		PWM	mA
+	300.0	100	20
+	320.0	100	30
+	340.0	80	40
+	360.0	61	40
+	380.0	54	40
+	400.0	48	40
+	420.0	44	40
+*/
+
+uint8_t get_pwm_power(uint16_t vdd)
+{
+	val16_t val;
+	val.u16 = vdd;
+
+	/* normalize Vdd to 3.00 to 4.20V range */
+	if (val.u16 < 300)
+		val.u16 = 300;
+	if (val.u16 > 420)
+		val.u16 = 420;
+
+	if (val.u16 >= 420) /* Vdd > 4.2V, powered by Nulink? */
+		val.u8low = 10;
+	else if (val.u16 >= 400)
+		val.u8low = map(val.u16, 400, 420, 48, 44);
+	else if (val.u16 >= 380)
+		val.u8low = map(val.u16, 380, 400, 54, 48);
+	else if (val.u16 >= 360)
+		val.u8low = map(val.u16, 360, 380, 61, 54);
+	else if (val.u16 >= 340)
+		val.u8low = map(val.u16, 340, 360, 80, 61);
+	else if (val.u16 >= 320)
+		val.u8low = map(val.u16, 320, 340, 100, 80);
+	else
+		val.u8low = 100; /* 100% id Vdd lower than 3.2V */
+	return val.u8low;
+}
+
+#else
+
 uint8_t get_pwm_power(uint16_t vdd)
 {
 	val16_t val;
@@ -256,12 +325,14 @@ uint8_t get_pwm_power(uint16_t vdd)
 	/* convert to 0 - 1.20 V range */
 	val.u16 = val.u16 - 300;
 	/* convert 0-1.20 V range to 0-30% range */
-	val.u8low = val.u8low / 4;
+	val.u8low = val.u8low / 2;
 	/* calculate PWM value */
 	val.u8high = 100 - val.u8low;
 
 	return val.u8high;
 }
+
+#endif
 
 void wkt_tick_set_mode(enum wkt_tick_mode_t mode)
 {
