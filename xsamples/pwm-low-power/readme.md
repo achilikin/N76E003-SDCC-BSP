@@ -5,6 +5,7 @@
 - [Supported commands:](#supported-commands)
 	- [reset](#reset)
 	- [vdd](#vdd)
+	- [pwr](#pwr)
 - [Used code and data](#used-code-and-data)
 - [State machine](#state-machine)
 - [Power states](#power-states)
@@ -40,40 +41,61 @@ Small version of Nuvoton N76E003 development board used:
                        N S L A D
                        D T K T D
 ```
-Board was modified to save power - AMS1117 volatge regulator remoed and Power led disconnected.
+Board was modified to save power - AMS1117 voltage regulator remoed and Power led disconnected.
+
+"Sleep Timer" - unnamed board from LED with 6 hours on and 18 hours off cycle. LED on this board was replaced with 10K resistor.
+
+<img src="./img/schematics.svg" width="600px"/>
+
+``MARK`` and ``CLO`` used as test points with oscilloscope.
+``SLEEP.OUT``, ``STATE.OUT.0`` and ``STATE.OUT.1`` used as test points with Nordic Power Profiler Kit II.
+
+Note that UART is active only in STATE_LED_ON state.
 
 # Supported commands:
 ```
 > help
-VER: 2310.06 (5886 bytes)
+VER: 2310.25 (6551 bytes)
 BGP: 0672 1237 mV
 Vdd: 3604 mV
 CMD:
-    vdd
+    vdd [$val]
+	pwr [auto|$pwr]
     reset
 ```
 ## reset
 Trigger soft reset
 
 ## vdd
-Measure and print current Vdd.
+Measure and print current Vdd or calculate PWM duty for the given Vdd.
 ```
 > vdd
 Vdd: 3604 mV, PWM: 85 %
+> vdd 360
+Vdd: 3.60 V, PWM: 85 %
 ```
+Note that vdd command used Vdd argument in 300 to 420 range (instead of 3000 to 4200 mV range).
 
-Note that UART is active only when LED is ON.
+## pwr
+Sets LED power in % by controlling PWM duty.
+```
+> pwr
+Auto: 70 %
+> pwr 10
+> pwr
+Matual: 10 %
+```
 
 # Used code and data
 ```
    Name              Start    End  Size   Max Spare
    ---------------- ------ ------ ----- ----- -----------
    REG BANKS        0x0000 0x000F     2     4     2
-   IDATA            0x0000 0x0055    86   256   170
+   IDATA            0x0000 0x005F    96   256   160
    OVERLAYS                           2
-   STACK            0x0056 0x00FF   170   248   170
+   STACK            0x0060 0x00FF   160   248   160
    EXTERNAL RAM     0x0001 0x00c7   199   768   569 74.1% free
-   ROM/EPROM/FLASH  0x0000 0x16fd  5886 18432 12546 68.1% free
+   ROM/EPROM/FLASH  0x0000 0x1996  6551 18432 11881 64.5% free
 ```
 
 # State machine
@@ -87,7 +109,25 @@ SLEEP_TIMER_PIN = 0, Vdd >= 3.0V.
 
 Fsys 16MHz, WKT timer fires every 1 msec.
 
-PWM0 used to drive LED according to lithium-ion battery voltage, PWM duty changes between 70% (Vdd 4.2V) and 100% (Vdd 3.0V).
+PWM0 is used to drive LED according to lithium-ion battery voltage.
+
+``LED_POWER_USE_MAP`` in main.h controls how PWM duty is calculated.
+
+``#define LED_POWER_USE_MAP 0`` changes PWM duty between 70% (Vdd 4.2V) and 100% (Vdd 3.0V). This mode works best with BJT transistors.
+
+``#define LED_POWER_USE_MAP 1`` calculates PWN duty according to map measured for average current through the LED Bulb. For example:
+
+| Vdd  | PWM | mA | PWM | mA |
+|------|----:|----|----:|--- |
+| 3.00 | 100 | 20 | 100 | 20 |
+| 3.20 | 100 | 30 | 100 | 30 |
+| 3.40 |  65 | 30 |  80 | 40 |
+| 3.60 |  50 | 30 |  61 | 40 |
+| 3.80 |  43 | 30 |  54 | 40 |
+| 4.00 |  38 | 30 |  48 | 40 |
+| 4.20 |  35 | 30 |  44 | 40 |
+
+This mode works best with BS170 MOSFET as it changes Rds dymanically depending on Vdd and Vgs. For single Li-ion battery voltages between 3.0V and 4.2V BS170 can be used without any LED current limiting resistors as Rds of BS170 is high enough.
 
 **STATE_LED_OFF**
 
