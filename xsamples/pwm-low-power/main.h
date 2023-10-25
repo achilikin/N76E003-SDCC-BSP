@@ -4,6 +4,7 @@
 #include <N76E003.h>
 
 #define DEBUG 0
+#define LED_POWER_USE_MAP 1 /* 0 to use linear instead of map */
 
 #ifdef MARK_PIN
 /** set pin to high and back to trace a time marker on oscilloscope */
@@ -36,7 +37,7 @@ uint16_t get_vdd(void);
  *@brief Convert Vdd to PWM duty
  *
  * @param vdd - normalized Vdd 300 for 3.0V, 420 for 4.2V
- * @return PWM duty 100 to 70%
+ * @return PWM duty 100 to 70% if LED_POWER_USE_MAP is 0, or mapped according to Vdd to mA table
  */
 uint8_t get_pwm_power(uint16_t vdd);
 
@@ -46,14 +47,17 @@ enum state_t {
 	STATE_BATTERY_LOW = 0x02	/** LED timer is ON, but battery low */
 };
 
-extern uint8_t state;
+extern uint8_t state; /* enum state_t above */
+
+#define LED_AUTO_POWER 0xFF
+extern uint8_t power; /* 0-100: manual, > 100: auto */
 
 void state_print(uint8_t state);
 void turn_led_on(uint8_t power);
 void turn_led_off(void);
 
 enum wkt_tick_mode_t {
-	WKT_TICK_MSEC,		/** ~1 msecd, default at init */
+	WKT_TICK_MSEC,		/** ~1 msec, default at init */
 	WKT_TICK_SECOND, 	/** ~1 second */
 	WKT_TICK_MINUTE, 	/** ~1 minute */
 	WKT_TICK_MODE_MAX
