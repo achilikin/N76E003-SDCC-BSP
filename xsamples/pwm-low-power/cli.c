@@ -10,12 +10,13 @@
 
 #include "main.h"
 
-#define APP_VERSION "2310.15"
+#define APP_VERSION "2310.25"
 
 /* list of supported commands */
 const __code char cmd_list[] =
 	"\n"
-	"vdd\n"
+	"vdd [$val]\n"
+	"pwr [auto|$pwr]\n"
 	"reset\n" /* sw reset */
 ;
 
@@ -59,35 +60,68 @@ int8_t commander(__idata char* cmd)
 	}
 
 	if (str_is(cmd, "reset")) {
+		if (*arg)
+			goto EARG;
 		uart_putsc("\nresetting...\n");
 		while (!uart_tx_empty());
 		sw_reset();
 	}
 
+	if (str_is(cmd, "pwr")) {
+		if (*arg == '\0') {
+			if (power > 100) {
+				uart_putsc("Auto: ");
+				uart_putn(pwm_duty_get(LED_PWM_CHANNEL));
+			} else {
+				uart_putsc("Manual: ");
+				uart_putn(power);
+			}
+			uart_putsc(" %\n");
+			goto EOK;
+		}
+
+		if (str_is(arg, "auto")) {
+			power = LED_AUTO_POWER;
+			goto EOK;
+		}
+
+		val.u16 = argtou(arg, &arg);
+		if (val.u16 > 100)
+			power = LED_AUTO_POWER;
+		else
+			power = val.u8low;
+		goto EOK;
+	}
+
 	if (str_is(cmd, "vdd")) {
-		if (*arg)
-			goto EARG;
+		if (*arg) { /* calculate PWM duty for the given Vdd */
+			val.u16 = argtou(arg, &arg);
+			if (val.u16 < 300)
+				val.u16 = 300;
+			if (val.u16 > 420)
+				val.u16 = 420;
+
+			uart_putsc("Vdd: ");
+			uart_putn(val.u16 / 100);
+			uart_putc('.');
+			uart_putn(val.u16 % 100);
+			uart_putsc(" V, PWM: ");
+			val.u8low = get_pwm_power(val.u16);
+			uart_putn(val.u8low);
+			uart_putsc(" %\n");
+			goto EOK;
+		}
 
 		val.u16 = adc_get_vdd(ADC_GET_VDD);
 		uart_putsc("Vdd: ");
 		uart_putn(val.u16);
 		uart_putsc(" mV, PWM: ");
-		/* normalize Vdd to 3.00 to 4.20V range */
-		/* 3.00 = 100% PWM, 4.20 rounded to 70% PWM */
-		val.u16 = val.u16 / 10;
-		if (val.u16 < 300)
-			val.u16 = 300;
-		if (val.u16 > 420)
-			val.u16 = 420;
-		/* convert to 0 - 1.20 V range */
-		val.u16 = val.u16 - 300;
-		/* convert 0-1.20 V range to 0-30% range */
-		val.u8low = val.u8low / 4;
-		/* calculate PWM value */
-		val.u8high = 100 - val.u8low;
-		uart_putn(val.u8high);
+		val.u8low = get_pwm_power(val.u16 / 10);
+
+		uart_putn(val.u8low);
 		uart_putsc(" %\n");
-		pwm_duty_set(LED_PWM_CHANNEL, val.u8high);
+
+		pwm_duty_set(LED_PWM_CHANNEL, val.u8low);
 		pwm_load();
 		goto EOK;
 	}
