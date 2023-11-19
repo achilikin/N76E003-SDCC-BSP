@@ -10,7 +10,7 @@
 
 #include "main.h"
 
-#define APP_VERSION "2310.25"
+#define APP_VERSION "2311.18"
 
 /* list of supported commands */
 const __code char cmd_list[] =
@@ -108,7 +108,7 @@ int8_t commander(__idata char* cmd)
 			uart_putsc(" V, PWM: ");
 			val.u8low = get_pwm_power(val.u16);
 			uart_putn(val.u8low);
-			uart_putsc(" %\n");
+			uart_putsc("%\n");
 			goto EOK;
 		}
 
@@ -119,7 +119,9 @@ int8_t commander(__idata char* cmd)
 		val.u8low = get_pwm_power(val.u16 / 10);
 
 		uart_putn(val.u8low);
-		uart_putsc(" %\n");
+		uart_putsc("% ");
+		state_print(state);
+		uart_putc('\n');
 
 		pwm_duty_set(LED_PWM_CHANNEL, val.u8low);
 		pwm_load();

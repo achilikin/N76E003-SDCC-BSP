@@ -55,7 +55,7 @@ Note that UART is active only in STATE_LED_ON state.
 # Supported commands:
 ```
 > help
-VER: 2310.25 (6551 bytes)
+VER: 2311.18 (6647 bytes)
 BGP: 0672 1237 mV
 Vdd: 3604 mV
 CMD:
@@ -70,9 +70,9 @@ Trigger soft reset
 Measure and print current Vdd or calculate PWM duty for the given Vdd.
 ```
 > vdd
-Vdd: 3604 mV, PWM: 85 %
+Vdd: 3604 mV, PWM: 85% STATE_LED_ON
 > vdd 360
-Vdd: 3.60 V, PWM: 85 %
+Vdd: 3.60 V, PWM: 85%
 ```
 Note that vdd command used Vdd argument in 300 to 420 range (instead of 3000 to 4200 mV range).
 
@@ -83,7 +83,7 @@ Sets LED power in % by controlling PWM duty.
 Auto: 70 %
 > pwr 10
 > pwr
-Matual: 10 %
+Manual: 10 %
 ```
 
 # Used code and data
@@ -95,7 +95,7 @@ Matual: 10 %
    OVERLAYS                           2
    STACK            0x0060 0x00FF   160   248   160
    EXTERNAL RAM     0x0001 0x00c7   199   768   569 74.1% free
-   ROM/EPROM/FLASH  0x0000 0x1996  6551 18432 11881 64.5% free
+   ROM/EPROM/FLASH  0x0000 0x19f6  6647 18432 11785 63.9% free
 ```
 
 # State machine

@@ -91,7 +91,7 @@ void main(void)
 
 	/** PWM configuration start ***********************************************/
 	pwm_clock_fsys(); /* select Fsys as PWM clock source */
-	PWM_CLOCK_DIV_16; /* 10kHz with PWM_PERIOD = 100 */
+	PWM_CLOCK_DIV_8; /* 20kHz with PWM_PERIOD = 100 */
 	pwm_clear();
 
 	/* for edge aligned PWM frequency == Fpwm /({PWMPH,PWNPL} + 1) */
@@ -292,7 +292,7 @@ uint8_t get_pwm_power(uint16_t vdd)
 	if (val.u16 > 420)
 		val.u16 = 420;
 
-	if (val.u16 >= 420) /* Vdd > 4.2V, powered by Nulink? */
+	if (val.u16 >= 430) /* Vdd > 4.2V, powered by Nulink? */
 		val.u8low = 10;
 	else if (val.u16 >= 400)
 		val.u8low = map(val.u16, 400, 420, 48, 44);
@@ -379,7 +379,6 @@ void fsys_set_clock(uint8_t fsys)
 	return;
 }
 
-#if DEBUG
 void state_print(uint8_t state)
 {
 	switch (state) {
@@ -393,7 +392,6 @@ void state_print(uint8_t state)
 		break;
 	}
 }
-#endif
 
 /* EXT0 IRQ to wake up on SLEEP_TIMER expiration */
 void ext0_interrupt_handler(void) INTERRUPT(IRQ_EXT0, IRQ_EXT0_REG_BANK)
