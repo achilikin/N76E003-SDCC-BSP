@@ -45,7 +45,7 @@ enum IRQ_NUM {
 #ifndef SDCC
 #define INTERRUPT(A,B)
 #else
-#define INTERRUPT(INUM,BANK) __interrupt INUM __using BANK
+#define INTERRUPT(INUM,BANK) __interrupt (INUM) __using (BANK)
 #endif
 
 /*
