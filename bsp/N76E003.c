@@ -13,7 +13,7 @@
 __bit EA_SAVE;
 
 /* Disable POR as recommended by N73E003 Series Errata Sheet */
-unsigned char _sdcc_external_startup (void) __naked /* '__naked' is used to save on prologue */
+unsigned char __sdcc_external_startup (void) __naked /* '__naked' is used to save on prologue */
 {
     ta_enable();
     PORDIS = 0x5A;
