@@ -65,7 +65,7 @@ void main(void)
 	tick = 0;
 
 	/**
-	 * configure pins P1.0-P1.1 as PWM0-PWM2
+	 * configure pins P1.0-P1.2 as PWM0-PWM2
 	 * used for debugging with an oscilloscope
 	 * can be omitted
 	 */

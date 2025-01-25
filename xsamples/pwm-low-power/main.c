@@ -82,7 +82,7 @@ void main(void)
 	delay(500);
 	clr_BODEN; /* disable BOD circuit to save power in power down mode */
 	cli_init(commander);
-	cli_exec("help\n"); /* '\n' will put promt sign '>' */
+	cli_exec("help\n"); /* '\n' will put prompt sign '>' */
 	/* cli_exec("help\n") called adc_get_vdd() and initialized internal iap_bgap value */
 	/* so we do not need iap anymore and better disable it to save extra ~1.2 mA in power down mode */
 	iap_disable();
@@ -115,7 +115,7 @@ void main(void)
 	} else {
 		if (SLEEP_TIMER_PIN == 0)
 			set_state(STATE_LED_ON);
-		else { /* can happen only in debug mode when SLEEP_TIMER_PIN pin controlled mannually */
+		else { /* can happen only in debug mode when SLEEP_TIMER_PIN pin controlled manually */
 			set_state(STATE_LED_OFF);
 			pwm_stop();
 			fsys_set_clock(FSYS_10KHZ);
@@ -368,7 +368,7 @@ void fsys_set_clock(uint8_t fsys)
 #else
 	if (fsys == FSYS_16MHZ) {
 		set_HIRCEN; /* enable high-speed internal oscillator */
-		while (!(CKSWT & SET_BIT5)); /* wait for oscillator to stabilyze */
+		while (!(CKSWT & SET_BIT5)); /* wait for oscillator to stabilize */
 		clr_OSC1; /* set CKSWT::OSC to 00 to select 16MHz clock */
 		return;
 	}
