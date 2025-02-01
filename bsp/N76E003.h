@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-#define BSP_VERSION "2501.25"
+#define BSP_VERSION "2502.01"
 
 /*------------------------------------------------------------------------------
   Some defines to make VS-Code IntelliSense happy
@@ -77,7 +77,10 @@ typedef union {
 #define HIRC_FREQ 16600000L
 #endif
 
-#define APROM_SIZE 18*1024 /* 0x4800 */
+#ifndef APROM_SIZE
+#define APROM_SIZE 18*1024 /* 0x4800 for N76E003 */
+#endif
+
 #define PAGE_SIZE  128
 
 /* SFR bytes with corresponding bits */

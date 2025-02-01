@@ -12,11 +12,20 @@
 
 __bit EA_SAVE;
 
+/* RC trim values at POR */
+uint8_t trim, trim0, trim1;
+
 /* Disable POR as recommended by N73E003 Series Errata Sheet */
 unsigned char __sdcc_external_startup (void) __naked /* '__naked' is used to save on prologue */
 {
-    ta_enable();
-    PORDIS = 0x5A;
+	if (PCON & SET_BIT4) {
+		trim = HIRC_TRIM;
+		trim0 = RCTRIM0;
+		trim1 = RCTRIM1;
+	}
+
+	ta_enable();
+	PORDIS = 0x5A;
     ta_enable();
     PORDIS = 0xA5;
    	__asm__("mov dpl,#0x00"); /* '__naked' is used, so generate epilogue manually */
@@ -32,8 +41,6 @@ uint16_t sdcc_get_code_size(void) __naked
 }
 
 #if defined FOSC_16600
-
-uint8_t trim, trim0, trim1;
 
 void set_fosc_16600(void)
 {

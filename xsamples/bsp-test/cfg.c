@@ -13,7 +13,7 @@
 cfg_t cfg;
 
 /* last page will be used for storing configuration */
-#define CFG_ADDRESS APROM_SIZE - PAGE_SIZE /* 0x4780 */
+#define CFG_ADDRESS APROM_SIZE - PAGE_SIZE /* 0x4780 for N76E003*/
 
 /* address of the configuration structure in the flash memory */
 __code __at(CFG_ADDRESS) cfg_t ecfg;

@@ -1,15 +1,33 @@
 ## some configuration defines
 IMAGE     = main
-MCU       = N76E003AT20
 ARCH      = mcs51
-## set system clock to 16.0 or 16.6 MHz
+MCU       = N76E003AT20
+## experimental: set to true for MS51*B* series with 16KB flash
+MS51_16KB  = false
+
+## N76E003AT20 configuration
+IRAM_SIZE = 256
+XRAM_SIZE = 768
+CODE_SIZE = 18432
+
+## set N76E003AT20 system clock to 16.0 or 16.6 MHz
 ## F_OSC  = FOSC_16000
 F_OSC     = FOSC_16600
 
+## handpicked N76E003AT20 RC trim value for FOSC_16600
+HIRC_TRIM = 19
+
+ifeq ($(MS51_16KB),true)
+## MS51FB9AE is pin-to-pin compatible with N76E003AT20
+MCU = MS51FB9AE
+IRAM_SIZE = 256
+XRAM_SIZE = 1024
+CODE_SIZE = 16384
+F_OSC     = FOSC_16000
+endif
+
 ## devboard uses UART 0
 USE_UART  = 0
-## handpicked RC trim value
-HIRC_TRIM = 19
 
 ## use BV4618 LCD controller board
 USE_BV4618_LCD = true
@@ -83,7 +101,7 @@ SIZE     = python $(BSPROOT)/pys/size-$(ARCH).py
 OBJCOPY  = sdobjcopy
 ASFLAGS  = -plosgff
 CFLAGS  += -m$(ARCH) -p$(MCU) --std-sdcc11
-CFLAGS  += -D$(F_OSC) -DDHT_PIN=$(DHT_PIN)
+CFLAGS  += -DAPROM_SIZE=$(CODE_SIZE) -D$(F_OSC) -DDHT_PIN=$(DHT_PIN)
 CFLAGS  += -I. -I$(BSPDIR) -I$(LIBDIR)
 CFLAGS  += $(STACK)
 CFLAGS  += --fomit-frame-pointer
@@ -114,7 +132,7 @@ CFLAGS += -DUSE_PCF8574_LCD -DPCF8574_LINES=$(PCF8574_LINES) -DPCF8574_CHARS=$(P
 endif
 
 LDFLAGS  = -m$(ARCH) -l$(ARCH) --out-fmt-ihx
-LDFLAGS  += --iram-size 256 --xram-size 768 --code-size 18432
+LDFLAGS  += --iram-size $(IRAM_SIZE) --xram-size $(XRAM_SIZE) --code-size $(CODE_SIZE)
 LDFLAGS  += $(STACK)
 
 all: $(IMAGE).ihx
