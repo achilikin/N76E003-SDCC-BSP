@@ -215,7 +215,9 @@ M5333B voltage regulator (35V to 3.3V):
 
 <img src="./img/vhm-800.jpg" width="400px"/>
 
-Three channel board:
+Three channel board (not tested used for BSP):
+
+<img src="./img/xy-lpwm3-schematics.svg"/>
 
 <img src="./img/xy-lpwm3.jpg" width="400px"/>
 
@@ -225,6 +227,8 @@ Nuvoton N76E003 official site https://www.nuvoton.com/products/microcontrollers/
 
 NuMicro software development tools https://github.com/OpenNuvoton/Nuvoton_Tools
 
-OpenNuvoton N76E003 BSP https://github.com/OpenNuvoton/N76E003-BSP
+OpenNuvoton NuMicro 8051 Family BSP / Sample Code https://github.com/OpenNuvoton/NuMicro-8051-Family
+
+OpenNuvoton N76E003 BSP v2.0 https://github.com/OpenNuvoton/N76E003_BSP
 
 Small Device C Compiler http://sdcc.sourceforge.net/
