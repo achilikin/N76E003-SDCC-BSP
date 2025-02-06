@@ -12,7 +12,7 @@
 #include "cfg.h"
 #include "pwm_range.h"
 
-#define APP_VERSION "2104.10"
+#define APP_VERSION "2502.06"
 
 #if (TARGET_BOARD == VHM_800_BOARD)
 	#define BOARD_NAME "VHM-800"
