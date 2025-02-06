@@ -253,8 +253,10 @@ void set_pwm_duty(uint8_t duty)
 		pwm_channel_set_mode(PWM_CHANNEL, PWM_MODE_LOW);
 	else if (duty == 100)
 		pwm_channel_set_mode(PWM_CHANNEL, PWM_MODE_HIGH);
-	else
+	else {
 		pwm_channel_set_mode(PWM_CHANNEL, PWM_MODE_RUN);
+		pwm_channel_set_duty(PWM_CHANNEL, duty);
+	}
 }
 
 /**
