@@ -81,7 +81,7 @@ void main(void)
 #endif
 	/* configure Schmitt triggered inputs for keys */
 #if (TARGET_BOARD == TARGET_NONAME)
-	P1S  |= SET_BIT1 | SET_BIT2 | SET_BIT3 | SET_BIT4;
+	P1S  |= SET_BIT1 | SET_BIT2 | SET_BIT3 | SET_BIT7;
 #else
 	P1S  |= SET_BIT1 | SET_BIT2 | SET_BIT3;
 	P3S  |= SET_BIT0;
